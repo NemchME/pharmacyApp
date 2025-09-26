@@ -1,0 +1,39 @@
+package org.example.repository.impl.inmemory;
+
+import org.example.model.Order;
+import org.example.repository.OrderRepository;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+
+public class InMemoryOrderRepository implements OrderRepository {
+
+    private final Map<Integer, Order> storageMap = new HashMap<>();
+
+    @Override
+    public void save(Order entity) {
+        storageMap.put(entity.getId(), entity);
+    }
+
+    @Override
+    public Optional<Order> findById(Integer id) {
+        return Optional.of(storageMap.get(id));
+    }
+
+    @Override
+    public List<Order> findAll() {
+        return storageMap.values().stream().toList();
+    }
+
+    @Override
+    public void update(Order entity) {
+        storageMap.put(entity.getId(), entity);
+    }
+
+    @Override
+    public void delete(Integer id) {
+        storageMap.remove(id);
+    }
+}

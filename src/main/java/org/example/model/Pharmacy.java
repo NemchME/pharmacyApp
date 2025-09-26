@@ -1,25 +1,27 @@
 package org.example.model;
 
 public class Pharmacy {
-    private int id;
+    private Integer id;
     private String name;
     private String address;
     private String phone;
     private String workingHours;
+    private String wayFromCenter;
 
-    public Pharmacy(int id, String name, String address, String phone, String workingHours) {
+    public Pharmacy(Integer id, String name, String address, String phone, String workingHours, String wayFromCenter) {
         this.id = id;
         this.name = name;
         this.address = address;
         this.phone = phone;
         this.workingHours = workingHours;
+        this.wayFromCenter = wayFromCenter;
     }
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -53,5 +55,13 @@ public class Pharmacy {
 
     public void setWorkingHours(String workingHours) {
         this.workingHours = workingHours;
+    }
+
+    public String getWayFromCenter() {
+        return wayFromCenter;
+    }
+
+    public void setWayFromCenter(String wayFromCenter) {
+        this.wayFromCenter = wayFromCenter;
     }
 }

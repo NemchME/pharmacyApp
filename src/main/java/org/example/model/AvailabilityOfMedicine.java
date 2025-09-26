@@ -3,14 +3,15 @@ package org.example.model;
 import java.sql.Timestamp;
 
 public class AvailabilityOfMedicine {
-    private int id;
-    private int pharmacyId;
-    private int medicineId;
-    private float price;
-    private int quantily;
+        private Integer id;
+        private Integer pharmacyId;
+        private Integer medicineId;
+    private Float price;
+    private Integer quantily;
     private Timestamp updatedAt;
 
-    public AvailabilityOfMedicine(int id, int pharmacyId, int medicineId, float price, int quantily, Timestamp updatedAt) {
+    public AvailabilityOfMedicine(Integer id, Integer pharmacyId, Integer medicineId, Float price,
+                                  Integer quantily, Timestamp updatedAt) {
         this.id = id;
         this.pharmacyId = pharmacyId;
         this.medicineId = medicineId;
@@ -19,43 +20,43 @@ public class AvailabilityOfMedicine {
         this.updatedAt = updatedAt;
     }
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
-    public int getPharmacyId() {
+    public Integer getPharmacyId() {
         return pharmacyId;
     }
 
-    public void setPharmacyId(int pharmacyId) {
+    public void setPharmacyId(Integer pharmacyId) {
         this.pharmacyId = pharmacyId;
     }
 
-    public int getMedicineId() {
+    public Integer getMedicineId() {
         return medicineId;
     }
 
-    public void setMedicineId(int medicineId) {
+    public void setMedicineId(Integer medicineId) {
         this.medicineId = medicineId;
     }
 
-    public float getPrice() {
+    public Float getPrice() {
         return price;
     }
 
-    public void setPrice(float price) {
+    public void setPrice(Float price) {
         this.price = price;
     }
 
-    public int getQuantily() {
+    public Integer getQuantily() {
         return quantily;
     }
 
-    public void setQuantily(int quantily) {
+    public void setQuantily(Integer quantily) {
         this.quantily = quantily;
     }
 

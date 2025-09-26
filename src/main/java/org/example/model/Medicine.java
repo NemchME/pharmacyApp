@@ -1,12 +1,12 @@
 package org.example.model;
 
 public class Medicine {
-    private int id;
+    private Integer id;
     private String tradeName;
     private String inn;
     private String dosage;
     private String form;
-    private int producerId;
+    private Integer producerId;
 
     public Medicine(int id, String tradeName, String inn, String dosage, String form, int producerId) {
         this.id = id;

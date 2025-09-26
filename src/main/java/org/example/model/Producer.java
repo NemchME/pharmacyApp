@@ -1,21 +1,21 @@
 package org.example.model;
 
 public class Producer {
-    private int id;
+    private Integer id;
     private String name;
     private String country;
 
-    public Producer(int id, String name, String country) {
+    public Producer(Integer id, String name, String country) {
         this.id = id;
         this.name = name;
         this.country = country;
     }
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 

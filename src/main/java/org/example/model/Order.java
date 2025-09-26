@@ -3,15 +3,16 @@ package org.example.model;
 import java.sql.Timestamp;
 
 public class Order {
-    private int id;
-    private int userId;
-    private int medicineId;
-    private int pharmacyId;
-    private int quantily;
+    private Integer id;
+    private Integer userId;
+    private Integer medicineId;
+    private Integer pharmacyId;
+    private Integer quantily;
     private String status;
     private Timestamp createdAt;
 
-    public Order(int id, int userId, int medicineId, int pharmacyId, int quantily, String status, Timestamp createdAt) {
+    public Order(Integer id, Integer userId, Integer medicineId, Integer pharmacyId, Integer quantily,
+                 String status, Timestamp createdAt) {
         this.id = id;
         this.userId = userId;
         this.medicineId = medicineId;
@@ -21,43 +22,43 @@ public class Order {
         this.createdAt = createdAt;
     }
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
-    public int getUserId() {
+    public Integer getUserId() {
         return userId;
     }
 
-    public void setUserId(int userId) {
+    public void setUserId(Integer userId) {
         this.userId = userId;
     }
 
-    public int getMedicineId() {
+    public Integer getMedicineId() {
         return medicineId;
     }
 
-    public void setMedicineId(int medicineId) {
+    public void setMedicineId(Integer medicineId) {
         this.medicineId = medicineId;
     }
 
-    public int getPharmacyId() {
+    public Integer getPharmacyId() {
         return pharmacyId;
     }
 
-    public void setPharmacyId(int pharmacyId) {
+    public void setPharmacyId(Integer pharmacyId) {
         this.pharmacyId = pharmacyId;
     }
 
-    public int getQuantily() {
+    public Integer getQuantily() {
         return quantily;
     }
 
-    public void setQuantily(int quantily) {
+    public void setQuantily(Integer quantily) {
         this.quantily = quantily;
     }
 
