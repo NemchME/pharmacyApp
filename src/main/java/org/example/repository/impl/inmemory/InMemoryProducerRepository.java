@@ -11,15 +11,16 @@ import java.util.Optional;
 public class InMemoryProducerRepository implements ProducerRepository {
 
     private final Map<Integer, Producer> storageMap = new HashMap<>();
-
+    private Integer idCounter = 0;
     @Override
     public void save(Producer entity) {
-        storageMap.put(entity.getId(), entity);
+        entity.setId(idCounter);
+        storageMap.put(idCounter++, entity);
     }
 
     @Override
     public Optional<Producer> findById(Integer id) {
-        return Optional.of(storageMap.get(id));
+        return Optional.ofNullable(storageMap.get(id));
     }
 
     @Override

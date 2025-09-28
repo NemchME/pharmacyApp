@@ -1,5 +1,6 @@
 package org.example.service;
 
+import org.example.exception.EntityNotFoundException;
 import org.example.model.User;
 import org.example.repository.UserRepository;
 
@@ -17,7 +18,9 @@ public class UserService {
     }
 
     public User findById(Integer id) {
-        return userRepository.findById(id).orElse(null);
+        return userRepository.findById(id).orElseThrow(
+                () -> new EntityNotFoundException("Пользователь с id '" + id + "' не найден!")
+        );
     }
 
     public List<User> findAll() {
@@ -25,6 +28,7 @@ public class UserService {
     }
 
     public void update(User user) {
+        findById(user.getId());
         userRepository.update(user);
     }
 

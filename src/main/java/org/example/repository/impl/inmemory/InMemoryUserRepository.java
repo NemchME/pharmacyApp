@@ -11,15 +11,17 @@ import java.util.Optional;
 public class InMemoryUserRepository implements UserRepository {
 
     private final Map<Integer, User> storageMap = new HashMap<>();
+    private Integer idCounter = 0;
 
     @Override
     public void save(User entity) {
-        storageMap.put(entity.getId(), entity);
+        entity.setId(idCounter);
+        storageMap.put(idCounter++, entity);
     }
 
     @Override
     public Optional<User> findById(Integer id) {
-        return Optional.of(storageMap.get(id));
+        return Optional.ofNullable(storageMap.get(id));
     }
 
     @Override

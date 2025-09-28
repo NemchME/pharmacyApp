@@ -15,6 +15,13 @@ public class User {
         this.role = role;
     }
 
+    public User(String username, String passwordHash, String email, String role) {
+        this.username = username;
+        this.passwordHash = passwordHash;
+        this.email = email;
+        this.role = role;
+    }
+
     public Integer getId() {
         return id;
     }
@@ -53,5 +60,16 @@ public class User {
 
     public void setRole(String role) {
         this.role = role;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", username='" + username + '\'' +
+                ", passwordHash='" + passwordHash + '\'' +
+                ", email='" + email + '\'' +
+                ", role='" + role + '\'' +
+                '}';
     }
 }

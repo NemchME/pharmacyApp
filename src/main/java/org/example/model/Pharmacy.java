@@ -17,6 +17,14 @@ public class Pharmacy {
         this.wayFromCenter = wayFromCenter;
     }
 
+    public Pharmacy(String name, String address, String phone, String workingHours, String wayFromCenter) {
+        this.name = name;
+        this.address = address;
+        this.phone = phone;
+        this.workingHours = workingHours;
+        this.wayFromCenter = wayFromCenter;
+    }
+
     public Integer getId() {
         return id;
     }
@@ -63,5 +71,17 @@ public class Pharmacy {
 
     public void setWayFromCenter(String wayFromCenter) {
         this.wayFromCenter = wayFromCenter;
+    }
+
+    @Override
+    public String toString() {
+        return "Pharmacy{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", address='" + address + '\'' +
+                ", phone='" + phone + '\'' +
+                ", workingHours='" + workingHours + '\'' +
+                ", wayFromCenter='" + wayFromCenter + '\'' +
+                '}';
     }
 }

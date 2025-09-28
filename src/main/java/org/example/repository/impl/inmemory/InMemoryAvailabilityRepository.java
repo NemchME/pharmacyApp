@@ -11,15 +11,17 @@ import java.util.Optional;
 public class InMemoryAvailabilityRepository implements AvailabilityOfMedicineRepository {
 
     private final Map<Integer, AvailabilityOfMedicine> storageMap = new HashMap<>();
+    private Integer idCounter = 0;
 
     @Override
     public void save(AvailabilityOfMedicine entity) {
-        storageMap.put(entity.getId(), entity);
+        entity.setId(idCounter);
+        storageMap.put(idCounter++, entity);
     }
 
     @Override
     public Optional<AvailabilityOfMedicine> findById(Integer id) {
-        return Optional.of(storageMap.get(id));
+        return Optional.ofNullable(storageMap.get(id));
     }
 
     @Override

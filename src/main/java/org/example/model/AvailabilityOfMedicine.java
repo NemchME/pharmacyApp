@@ -1,23 +1,32 @@
 package org.example.model;
 
 import java.sql.Timestamp;
+import java.time.Instant;
 
 public class AvailabilityOfMedicine {
-        private Integer id;
-        private Integer pharmacyId;
-        private Integer medicineId;
+    private Integer id;
+    private Integer pharmacyId;
+    private Integer medicineId;
     private Float price;
     private Integer quantily;
     private Timestamp updatedAt;
 
-    public AvailabilityOfMedicine(Integer id, Integer pharmacyId, Integer medicineId, Float price,
-                                  Integer quantily, Timestamp updatedAt) {
+    public AvailabilityOfMedicine(Integer id, Integer pharmacyId, Integer medicineId, Float price, Integer quantily) {
         this.id = id;
         this.pharmacyId = pharmacyId;
         this.medicineId = medicineId;
         this.price = price;
         this.quantily = quantily;
-        this.updatedAt = updatedAt;
+        this.updatedAt = Timestamp.from(Instant.now());
+    }
+
+    public AvailabilityOfMedicine(Integer pharmacyId, Integer medicineId, Float price,
+                                  Integer quantily) {
+        this.pharmacyId = pharmacyId;
+        this.medicineId = medicineId;
+        this.price = price;
+        this.quantily = quantily;
+        this.updatedAt = Timestamp.from(Instant.now());
     }
 
     public Integer getId() {
@@ -66,5 +75,17 @@ public class AvailabilityOfMedicine {
 
     public void setUpdatedAt(Timestamp updatedAt) {
         this.updatedAt = updatedAt;
+    }
+
+    @Override
+    public String toString() {
+        return "AvailabilityOfMedicine{" +
+                "id=" + id +
+                ", pharmacyId=" + pharmacyId +
+                ", medicineId=" + medicineId +
+                ", price=" + price +
+                ", quantily=" + quantily +
+                ", updatedAt=" + updatedAt +
+                '}';
     }
 }

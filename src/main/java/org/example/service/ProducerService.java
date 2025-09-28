@@ -1,5 +1,6 @@
 package org.example.service;
 
+import org.example.exception.EntityNotFoundException;
 import org.example.model.Producer;
 import org.example.repository.ProducerRepository;
 
@@ -9,7 +10,7 @@ public class ProducerService {
 
     private final ProducerRepository producerRepository;
 
-    public ProducerService(ProducerRepository ProducerRepository) {
+    public ProducerService(ProducerRepository producerRepository) {
         this.producerRepository = producerRepository;
     }
 
@@ -18,7 +19,9 @@ public class ProducerService {
     }
 
     public Producer findById(Integer id) {
-        return producerRepository.findById(id).orElse(null);
+        return producerRepository.findById(id).orElseThrow(
+                () -> new EntityNotFoundException("Производитель с id '" + id + "' не найден!")
+        );
     }
 
     public List<Producer> findAll() {
@@ -26,6 +29,7 @@ public class ProducerService {
     }
 
     public void update(Producer producer) {
+        findById(producer.getId());
         producerRepository.update(producer);
     }
 

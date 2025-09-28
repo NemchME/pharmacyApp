@@ -8,8 +8,16 @@ public class Medicine {
     private String form;
     private Integer producerId;
 
-    public Medicine(int id, String tradeName, String inn, String dosage, String form, int producerId) {
+    public Medicine(Integer id, String tradeName, String inn, String dosage, String form, Integer producerId) {
         this.id = id;
+        this.tradeName = tradeName;
+        this.inn = inn;
+        this.dosage = dosage;
+        this.form = form;
+        this.producerId = producerId;
+    }
+
+    public Medicine(String tradeName, String inn, String dosage, String form, int producerId) {
         this.tradeName = tradeName;
         this.inn = inn;
         this.dosage = dosage;

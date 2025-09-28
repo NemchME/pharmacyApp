@@ -1,6 +1,7 @@
 package org.example.model;
 
 import java.sql.Timestamp;
+import java.time.Instant;
 
 public class Order {
     private Integer id;
@@ -11,15 +12,24 @@ public class Order {
     private String status;
     private Timestamp createdAt;
 
-    public Order(Integer id, Integer userId, Integer medicineId, Integer pharmacyId, Integer quantily,
-                 String status, Timestamp createdAt) {
+    public Order(Integer id, Integer userId, Integer medicineId, Integer pharmacyId, Integer quantily, String status) {
         this.id = id;
         this.userId = userId;
         this.medicineId = medicineId;
         this.pharmacyId = pharmacyId;
         this.quantily = quantily;
         this.status = status;
-        this.createdAt = createdAt;
+        this.createdAt = Timestamp.from(Instant.now());
+    }
+
+    public Order(Integer userId, Integer medicineId, Integer pharmacyId, Integer quantily,
+                 String status) {
+        this.userId = userId;
+        this.medicineId = medicineId;
+        this.pharmacyId = pharmacyId;
+        this.quantily = quantily;
+        this.status = status;
+        this.createdAt = Timestamp.from(Instant.now());
     }
 
     public Integer getId() {
@@ -76,5 +86,18 @@ public class Order {
 
     public void setCreatedAt(Timestamp createdAt) {
         this.createdAt = createdAt;
+    }
+
+    @Override
+    public String toString() {
+        return "Order{" +
+                "id=" + id +
+                ", userId=" + userId +
+                ", medicineId=" + medicineId +
+                ", pharmacyId=" + pharmacyId +
+                ", quantily=" + quantily +
+                ", status='" + status + '\'' +
+                ", createdAt=" + createdAt +
+                '}';
     }
 }

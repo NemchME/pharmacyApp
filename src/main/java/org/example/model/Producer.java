@@ -11,6 +11,11 @@ public class Producer {
         this.country = country;
     }
 
+    public Producer(String name, String country) {
+        this.name = name;
+        this.country = country;
+    }
+
     public Integer getId() {
         return id;
     }
@@ -33,5 +38,14 @@ public class Producer {
 
     public void setCountry(String country) {
         this.country = country;
+    }
+
+    @Override
+    public String toString() {
+        return "Producer{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", country='" + country + '\'' +
+                '}';
     }
 }

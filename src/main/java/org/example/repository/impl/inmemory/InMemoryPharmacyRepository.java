@@ -11,15 +11,17 @@ import java.util.Optional;
 public class InMemoryPharmacyRepository implements PharmacyRepository {
 
     private final Map<Integer, Pharmacy> storageMap = new HashMap<>();
+    private Integer idCounter = 0;
 
     @Override
     public void save(Pharmacy entity) {
-        storageMap.put(entity.getId(), entity);
+        entity.setId(idCounter);
+        storageMap.put(idCounter++, entity);
     }
 
     @Override
     public Optional<Pharmacy> findById(Integer id) {
-        return Optional.of(storageMap.get(id));
+        return Optional.ofNullable(storageMap.get(id));
     }
 
     @Override

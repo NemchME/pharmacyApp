@@ -1,5 +1,6 @@
 package org.example.service;
 
+import org.example.exception.EntityNotFoundException;
 import org.example.model.Pharmacy;
 import org.example.repository.PharmacyRepository;
 
@@ -18,7 +19,9 @@ public class PharmacyService {
     }
 
     public Pharmacy findById(Integer id) {
-        return pharmacyRepository.findById(id).orElse(null);
+        return pharmacyRepository.findById(id).orElseThrow(
+                () -> new EntityNotFoundException("Аптека с id '" + id + "' не найдена!")
+        );
     }
 
     public List<Pharmacy> findAll() {
@@ -26,6 +29,7 @@ public class PharmacyService {
     }
 
     public void update(Pharmacy pharmacy) {
+        findById(pharmacy.getId());
         pharmacyRepository.update(pharmacy);
     }
 
