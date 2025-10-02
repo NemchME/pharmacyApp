@@ -1,5 +1,7 @@
 package org.example.model;
 
+import java.util.Objects;
+
 public class Medicine {
     private Integer id;
     private String tradeName;
@@ -83,5 +85,19 @@ public class Medicine {
                 ", form='" + form + '\'' +
                 ", producerId=" + producerId +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        Medicine medicine = (Medicine) o;
+        return Objects.equals(id, medicine.id) && Objects.equals(tradeName, medicine.tradeName) &&
+                Objects.equals(inn, medicine.inn) && Objects.equals(dosage, medicine.dosage) &&
+                Objects.equals(form, medicine.form) && Objects.equals(producerId, medicine.producerId);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, tradeName, inn, dosage, form, producerId);
     }
 }

@@ -1,5 +1,7 @@
 package org.example.model;
 
+import java.util.Objects;
+
 public class Pharmacy {
     private Integer id;
     private String name;
@@ -83,5 +85,20 @@ public class Pharmacy {
                 ", workingHours='" + workingHours + '\'' +
                 ", wayFromCenter='" + wayFromCenter + '\'' +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        Pharmacy pharmacy = (Pharmacy) o;
+        return Objects.equals(id, pharmacy.id) && Objects.equals(name, pharmacy.name) &&
+                Objects.equals(address, pharmacy.address) && Objects.equals(phone, pharmacy.phone) &&
+                Objects.equals(workingHours, pharmacy.workingHours) &&
+                Objects.equals(wayFromCenter, pharmacy.wayFromCenter);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, address, phone, workingHours, wayFromCenter);
     }
 }

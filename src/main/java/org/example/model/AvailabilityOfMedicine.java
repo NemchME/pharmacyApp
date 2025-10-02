@@ -2,6 +2,7 @@ package org.example.model;
 
 import java.sql.Timestamp;
 import java.time.Instant;
+import java.util.Objects;
 
 public class AvailabilityOfMedicine {
     private Integer id;
@@ -87,5 +88,21 @@ public class AvailabilityOfMedicine {
                 ", quantily=" + quantily +
                 ", updatedAt=" + updatedAt +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        AvailabilityOfMedicine that = (AvailabilityOfMedicine) o;
+        return Objects.equals(id, that.id) && Objects.equals(pharmacyId, that.pharmacyId) &&
+                Objects.equals(medicineId, that.medicineId) &&
+                Objects.equals(price, that.price) &&
+                Objects.equals(quantily, that.quantily) &&
+                Objects.equals(updatedAt, that.updatedAt);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, pharmacyId, medicineId, price, quantily, updatedAt);
     }
 }

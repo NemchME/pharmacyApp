@@ -1,5 +1,7 @@
 package org.example.model;
 
+import java.util.Objects;
+
 public class User {
     private Integer id;
     private String username;
@@ -71,5 +73,19 @@ public class User {
                 ", email='" + email + '\'' +
                 ", role='" + role + '\'' +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        User user = (User) o;
+        return Objects.equals(id, user.id) && Objects.equals(username, user.username) &&
+                Objects.equals(passwordHash, user.passwordHash) && Objects.equals(email, user.email) &&
+                Objects.equals(role, user.role);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, username, passwordHash, email, role);
     }
 }

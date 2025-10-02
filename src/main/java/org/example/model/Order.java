@@ -2,6 +2,7 @@ package org.example.model;
 
 import java.sql.Timestamp;
 import java.time.Instant;
+import java.util.Objects;
 
 public class Order {
     private Integer id;
@@ -99,5 +100,20 @@ public class Order {
                 ", status='" + status + '\'' +
                 ", createdAt=" + createdAt +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        Order order = (Order) o;
+        return Objects.equals(id, order.id) && Objects.equals(userId, order.userId) &&
+                Objects.equals(medicineId, order.medicineId) && Objects.equals(pharmacyId, order.pharmacyId) &&
+                Objects.equals(quantily, order.quantily) && Objects.equals(status, order.status) &&
+                Objects.equals(createdAt, order.createdAt);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, userId, medicineId, pharmacyId, quantily, status, createdAt);
     }
 }
