@@ -24,8 +24,9 @@ public class OrderService {
     }
 
     public void save(Order order) {
-        checkForeignKeys(order.getUserId(), order.getMedicineId(), order.getPharmacyId());
+        if (checkForeignKeys(order.getUserId(), order.getMedicineId(), order.getPharmacyId())) {
         orderRepository.save(order);
+        }
     }
 
     public Order findById(Integer id) {
@@ -39,18 +40,18 @@ public class OrderService {
     }
 
     public void update(Order order) {
-        findById(order.getId());
-        checkForeignKeys(order.getUserId(), order.getMedicineId(), order.getPharmacyId());
-        orderRepository.update(order);
+        if (findById(order.getId()) != null &&
+                checkForeignKeys(order.getUserId(), order.getMedicineId(), order.getPharmacyId())) {
+            orderRepository.update(order);
+        }
     }
 
     public void delete(Integer id) {
         orderRepository.delete(id);
     }
 
-    private void checkForeignKeys(Integer userId, Integer medicineId, Integer pharmacyId) {
-        userService.findById(userId);
-        medicineService.findById(medicineId);
-        pharmacyService.findById(pharmacyId);
+    private boolean checkForeignKeys(Integer userId, Integer medicineId, Integer pharmacyId) {
+        return userService.findById(userId) != null && medicineService.findById(medicineId) != null &&
+                pharmacyService.findById(pharmacyId) != null;
     }
 }

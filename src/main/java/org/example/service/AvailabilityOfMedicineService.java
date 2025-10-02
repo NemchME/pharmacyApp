@@ -21,8 +21,9 @@ public class AvailabilityOfMedicineService {
     }
 
     public void save(AvailabilityOfMedicine availabilityOfMedicine) {
-        checkForeignKeys(availabilityOfMedicine.getPharmacyId(), availabilityOfMedicine.getMedicineId());
-        availabilityOfMedicineRepository.save(availabilityOfMedicine);
+        if (checkForeignKeys(availabilityOfMedicine.getPharmacyId(), availabilityOfMedicine.getMedicineId())) {
+            availabilityOfMedicineRepository.save(availabilityOfMedicine);
+        }
     }
 
     public AvailabilityOfMedicine findById(Integer id) {
@@ -37,17 +38,17 @@ public class AvailabilityOfMedicineService {
     }
 
     public void update(AvailabilityOfMedicine availabilityOfMedicine) {
-        findById(availabilityOfMedicine.getId());
-        checkForeignKeys(availabilityOfMedicine.getPharmacyId(), availabilityOfMedicine.getMedicineId());
-        availabilityOfMedicineRepository.update(availabilityOfMedicine);
+        if (findById(availabilityOfMedicine.getId()) != null &&
+                checkForeignKeys(availabilityOfMedicine.getPharmacyId(), availabilityOfMedicine.getMedicineId())) {
+            availabilityOfMedicineRepository.update(availabilityOfMedicine);
+        }
     }
 
     public void delete(Integer id) {
         availabilityOfMedicineRepository.delete(id);
     }
 
-    private void checkForeignKeys(Integer pharmacyId, Integer medicineId) {
-        pharmacyService.findById(pharmacyId);
-        medicineService.findById(medicineId);
+    private boolean checkForeignKeys(Integer pharmacyId, Integer medicineId) {
+        return pharmacyService.findById(pharmacyId) != null && medicineService.findById(medicineId) != null;
     }
 }

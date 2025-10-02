@@ -29,8 +29,9 @@ public class ProducerService {
     }
 
     public void update(Producer producer) {
-        findById(producer.getId());
-        producerRepository.update(producer);
+        if (findById(producer.getId()) != null) {
+            producerRepository.update(producer);
+        }
     }
 
     public void delete(Integer id) {

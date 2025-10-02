@@ -28,8 +28,10 @@ public class UserService {
     }
 
     public void update(User user) {
-        findById(user.getId());
-        userRepository.update(user);
+        if (findById(user.getId()) != null);
+        {
+            userRepository.update(user);
+        }
     }
 
     public void delete(Integer id) {

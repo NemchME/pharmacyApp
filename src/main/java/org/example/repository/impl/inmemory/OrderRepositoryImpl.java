@@ -13,7 +13,6 @@ public class OrderRepositoryImpl implements OrderRepository {
     private final Map<Integer, Order> storageMap = new HashMap<>();
     private Integer idCounter = 0;
 
-
     @Override
     public void save(Order entity) {
         entity.setId(idCounter);

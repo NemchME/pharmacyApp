@@ -18,8 +18,9 @@ public class MedicineService {
     }
 
     public void save(Medicine medicine) {
-        checkForeignKey(medicine.getProducerId());
-        medicineRepository.save(medicine);
+         if (checkForeignKey(medicine.getProducerId())) {
+             medicineRepository.save(medicine);
+         }
     }
 
     public Medicine findById(Integer id) {
@@ -33,16 +34,16 @@ public class MedicineService {
     }
 
     public void update(Medicine medicine) {
-        findById(medicine.getId());
-        checkForeignKey(medicine.getProducerId());
-        medicineRepository.update(medicine);
+        if (findById(medicine.getId()) != null && checkForeignKey(medicine.getProducerId())) {
+            medicineRepository.update(medicine);
+        }
     }
 
     public void delete(Integer id) {
         medicineRepository.delete(id);
     }
 
-    private void checkForeignKey(Integer producerId) {
-        producerService.findById(producerId);
+    private boolean checkForeignKey(Integer producerId) {
+        return producerService.findById(producerId) != null;
     }
 }

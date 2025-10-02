@@ -29,8 +29,9 @@ public class PharmacyService {
     }
 
     public void update(Pharmacy pharmacy) {
-        findById(pharmacy.getId());
-        pharmacyRepository.update(pharmacy);
+        if (findById(pharmacy.getId()) != null) {
+            pharmacyRepository.update(pharmacy);
+        }
     }
 
     public void delete(Integer id) {

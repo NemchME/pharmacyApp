@@ -88,17 +88,6 @@ public class ConsoleApp {
         orderService.save(order);
     }
 
-//    private void chooseVersion() {
-//        while (true) {
-//            System.out.println("""
-//                                Выберите реализацию БД:
-//                                1. In-memory
-//                                2. jdbc
-//                                """);
-//
-//        }
-//    }
-
     public static void main(String[] args) {
         new ConsoleApp().run();
     }
