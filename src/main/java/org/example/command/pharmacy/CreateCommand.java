@@ -2,6 +2,7 @@ package org.example.command.pharmacy;
 
 import org.example.ConsoleApp;
 import org.example.command.Command;
+import org.example.command.validator.Validator;
 import org.example.menu.Menu;
 import org.example.menu.impl.PharmacyMenu;
 import org.example.model.Pharmacy;
@@ -23,11 +24,11 @@ public class CreateCommand implements Command {
                         "Введите следующие поля: name, address, phone, working_hours, way_from_center");
             }
             Pharmacy entity = new Pharmacy(
-                    entityArgs[0].trim(),
-                    entityArgs[1].trim(),
-                    entityArgs[2].trim(),
-                    entityArgs[3].trim(),
-                    entityArgs[4].trim()
+                    Validator.requireNotBlank(entityArgs[0], "Введите name"),
+                    Validator.requireNotBlank(entityArgs[1], "Введите address"),
+                    Validator.requireNotBlank(entityArgs[2], "Введите phone"),
+                    Validator.requireNotBlank(entityArgs[3], "Введите working_hours"),
+                    Validator.requireNotBlank(entityArgs[4], "Введите way_from_center")
             );
             consoleApp.getPharmacyService().save(entity);
             System.out.println("Сущность сохранена с id: " + entity.getId());

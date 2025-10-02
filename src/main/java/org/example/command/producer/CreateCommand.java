@@ -2,6 +2,7 @@ package org.example.command.producer;
 
 import org.example.ConsoleApp;
 import org.example.command.Command;
+import org.example.command.validator.Validator;
 import org.example.menu.Menu;
 import org.example.menu.impl.ProducerMenu;
 import org.example.model.Producer;
@@ -23,8 +24,8 @@ public class CreateCommand implements Command {
                         "Ошибка: Введите следующие поля: name, country");
             }
             Producer entity = new Producer(
-                    entityArgs[0].trim(),
-                    entityArgs[1].trim()
+                    Validator.requireNotBlank(entityArgs[0], "Введите name"),
+                    Validator.requireNotBlank(entityArgs[1], "Введите country")
             );
             consoleApp.getProducerService().save(entity);
             System.out.println("Сущность сохранена с id: " + entity.getId());
