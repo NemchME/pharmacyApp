@@ -1,37 +1,36 @@
 package org.example.repository.impl.inmemory;
 
-import org.example.model.Medicine;
-import org.example.repository.MedicineRepository;
+import org.example.model.AvailabilityOfMedicine;
+import org.example.repository.AvailabilityOfMedicineRepository;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-public class InMemoryMedicineRepository implements MedicineRepository {
+public class AvailabilityRepositoryImpl implements AvailabilityOfMedicineRepository {
 
-    private final Map<Integer, Medicine> storageMap = new HashMap<>();
+    private final Map<Integer, AvailabilityOfMedicine> storageMap = new HashMap<>();
     private Integer idCounter = 0;
 
-
     @Override
-    public void save(Medicine entity) {
+    public void save(AvailabilityOfMedicine entity) {
         entity.setId(idCounter);
         storageMap.put(idCounter++, entity);
     }
 
     @Override
-    public Optional<Medicine> findById(Integer id) {
+    public Optional<AvailabilityOfMedicine> findById(Integer id) {
         return Optional.ofNullable(storageMap.get(id));
     }
 
     @Override
-    public List<Medicine> findAll() {
+    public List<AvailabilityOfMedicine> findAll() {
         return storageMap.values().stream().toList();
     }
 
     @Override
-    public void update(Medicine entity) {
+    public void update(AvailabilityOfMedicine entity) {
         storageMap.put(entity.getId(), entity);
     }
 

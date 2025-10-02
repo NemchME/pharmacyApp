@@ -20,14 +20,14 @@ public class ConsoleApp {
     private Menu menu = new MainMenu();
 
     public ConsoleApp() {
-        this.pharmacyService = new PharmacyService(new InMemoryPharmacyRepository());
-        this.producerService = new ProducerService(new InMemoryProducerRepository());
-        this.userService = new UserService(new InMemoryUserRepository());
-        this.medicineService = new MedicineService(new InMemoryMedicineRepository(), this.producerService);
+        this.pharmacyService = new PharmacyService(new PharmacyRepositoryImpl());
+        this.producerService = new ProducerService(new ProducerRepositoryImpl());
+        this.userService = new UserService(new UserRepositoryImpl());
+        this.medicineService = new MedicineService(new MedicineRepositoryImpl(), this.producerService);
         this.availabilityOfMedicineService = new AvailabilityOfMedicineService(
-                new InMemoryAvailabilityRepository(), this.pharmacyService, this.medicineService);
+                new AvailabilityRepositoryImpl(), this.pharmacyService, this.medicineService);
         this.orderService = new OrderService(
-                new InMemoryOrderRepository(), this.userService, this.medicineService, this.pharmacyService);
+                new OrderRepositoryImpl(), this.userService, this.medicineService, this.pharmacyService);
 
     }
 

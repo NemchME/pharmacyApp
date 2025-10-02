@@ -1,37 +1,36 @@
 package org.example.repository.impl.inmemory;
 
-import org.example.model.Order;
-import org.example.repository.OrderRepository;
+import org.example.model.Pharmacy;
+import org.example.repository.PharmacyRepository;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-public class InMemoryOrderRepository implements OrderRepository {
+public class PharmacyRepositoryImpl implements PharmacyRepository {
 
-    private final Map<Integer, Order> storageMap = new HashMap<>();
+    private final Map<Integer, Pharmacy> storageMap = new HashMap<>();
     private Integer idCounter = 0;
 
-
     @Override
-    public void save(Order entity) {
+    public void save(Pharmacy entity) {
         entity.setId(idCounter);
         storageMap.put(idCounter++, entity);
     }
 
     @Override
-    public Optional<Order> findById(Integer id) {
+    public Optional<Pharmacy> findById(Integer id) {
         return Optional.ofNullable(storageMap.get(id));
     }
 
     @Override
-    public List<Order> findAll() {
+    public List<Pharmacy> findAll() {
         return storageMap.values().stream().toList();
     }
 
     @Override
-    public void update(Order entity) {
+    public void update(Pharmacy entity) {
         storageMap.put(entity.getId(), entity);
     }
 
