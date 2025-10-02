@@ -28,13 +28,12 @@ public class ConsoleApp {
                 new AvailabilityRepositoryImpl(), this.pharmacyService, this.medicineService);
         this.orderService = new OrderService(
                 new OrderRepositoryImpl(), this.userService, this.medicineService, this.pharmacyService);
-
     }
 
     public void run() {
         inputTestData();
         while (true) {
-        menu = menu.execute(this);
+        menu = menu.show(this);
         }
     }
 

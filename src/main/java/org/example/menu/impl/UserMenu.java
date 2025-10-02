@@ -1,136 +1,59 @@
 package org.example.menu.impl;
 
 import org.example.ConsoleApp;
-import org.example.exception.EntityNotFoundException;
-import org.example.menu.CrudMenu;
-import org.example.menu.Menu;
-import org.example.model.User;
+import org.example.command.Command;
+import org.example.command.mainMenu.MainMenuCommand;
+import org.example.command.user.*;
 
-public class UserMenu implements Menu, CrudMenu {
+import org.example.menu.Menu;
+
+import java.util.LinkedHashMap;
+import java.util.Map;
+
+
+public class UserMenu implements Menu {
+
+    private final Map<String, Command> commandsMap = new LinkedHashMap<>();
+    private final Map<String, String> descriptionsMap = new LinkedHashMap<>();
+
+    public UserMenu() {
+        commandsMap.put("1", new FindAllCommand());
+        commandsMap.put("2", new CreateCommand());
+        commandsMap.put("3", new ReadCommand());
+        commandsMap.put("4", new UpdateCommand());
+        commandsMap.put("5", new DeleteCommand());
+        commandsMap.put("6", new MainMenuCommand());
+        descriptionsMap.put("1", "Получить всех пользователей");
+        descriptionsMap.put("2", "Сохранить пользователя");
+        descriptionsMap.put("3", "Найти пользователя");
+        descriptionsMap.put("4", "Обновить пользователя");
+        descriptionsMap.put("5", "Удалить пользователя");
+        descriptionsMap.put("6", "Перейти в главное меню");
+    }
 
     @Override
-    public Menu execute(ConsoleApp consoleApp) {
+    public Menu show(ConsoleApp consoleApp) {
         while (true) {
             try {
-                System.out.println("""
-                        Выберите действие:
-                        1. Получить всех пользователей
-                        2. Сохранить пользователя
-                        3. Найти пользователя
-                        4. Обновить пользователя
-                        5. Удалить пользователя
-                        6. Перейти в главное меню
-                        """);
+                printMenu();
+                String choice = consoleApp.getScanner().nextLine().trim();
 
-                String choice = consoleApp.getScanner().nextLine();
-                return switch (choice) {
-                    case "1" -> findAllEntities(consoleApp);
-                    case "2" -> createEntity(consoleApp);
-                    case "3" -> readEntity(consoleApp);
-                    case "4" -> updateEntity(consoleApp);
-                    case "5" -> deleteEntity(consoleApp);
-                    case "6" -> new MainMenu();
-                    default -> throw new IllegalArgumentException("Неверный ввод! Введите число от 1 до 6.");
-                };
+                Command command = commandsMap.get(choice);
+
+                if (command == null) {
+                    throw new IllegalArgumentException("Неверный ввод! Введите число от 1 до " + commandsMap.size() +
+                            ".");
+                }
+                return command.execute(consoleApp);
             } catch (Exception e) {
                 System.out.println("Ошибка: " + e.getMessage());
             }
         }
     }
 
-    @Override
-    public Menu findAllEntities(ConsoleApp consoleApp) {
-        System.out.println(consoleApp.getUserService().findAll());
-        return new UserMenu();
-    }
-
-    @Override
-    public Menu createEntity(ConsoleApp consoleApp) {
-        try {
-            System.out.println("""
-                    Введите данные о пользователе через запятую:
-                    [username, password_hash, email, role].
-                    Пример ввода: Пользователь, 1234@, test@test.com, админ
-                    """);
-            String[] entityArgs = consoleApp.getScanner().nextLine().split(",");
-
-            if (entityArgs.length != 4) {
-                throw new IllegalArgumentException(
-                        "Введите следующие поля: username, password_hash, email, role");
-            }
-            User entity = new User(
-                    entityArgs[0].trim(),
-                    entityArgs[1].trim(),
-                    entityArgs[2].trim(),
-                    entityArgs[3].trim()
-            );
-            consoleApp.getUserService().save(entity);
-            System.out.println("Сущность сохранена с id: " + entity.getId());
-        } catch (IndexOutOfBoundsException e) {
-            System.out.println(
-                    "Ошибка: Введите следующие поля: username, password_hash, email, role");
-        } catch (Exception e) {
-            System.out.println("Ошибка: " + e.getMessage());
-        }
-        return new UserMenu();
-    }
-
-    @Override
-    public Menu readEntity(ConsoleApp consoleApp) {
-        try {
-            System.out.println("Введите id пользователя: ");
-            int id = Integer.parseInt(consoleApp.getScanner().nextLine().trim());
-            System.out.println(consoleApp.getUserService().findById(id));
-        } catch (EntityNotFoundException e) {
-            System.out.println(e.getMessage());
-
-        } catch (NumberFormatException e) {
-            System.out.println("Ошибка: " + e.getMessage());
-        }
-        return new UserMenu();
-    }
-
-    @Override
-    public Menu updateEntity(ConsoleApp consoleApp) {
-        try {
-            System.out.println("""
-                    Введите обновленные данные через запятую:
-                    [id, username, password_hash, email, role].
-                    Пример ввода: 1, Пользователь, 1234@, test@test.com, админ.
-                    """);
-            String[] entityArgs = consoleApp.getScanner().nextLine().split(",");
-            if (entityArgs.length != 5) {
-                throw new IllegalArgumentException(
-                        "Ошибка: Введите следующие поля: id, username, password_hash, email, role");
-            }
-            User entity = new User(
-                    Integer.parseInt(entityArgs[0].trim()),
-                    entityArgs[1].trim(),
-                    entityArgs[2].trim(),
-                    entityArgs[3].trim(),
-                    entityArgs[4].trim()
-            );
-            consoleApp.getUserService().update(entity);
-            System.out.println("Сущность обновлена с id: " + entity.getId());
-        } catch (IndexOutOfBoundsException e) {
-            System.out.println(
-                    "Ошибка: Введите следующие поля: username, password_hash, email, role");
-        } catch (Exception e) {
-            System.out.println("Ошибка: " + e.getMessage());
-        }
-        return new UserMenu();
-    }
-
-    @Override
-    public Menu deleteEntity(ConsoleApp consoleApp) {
-        try {
-            System.out.println("Введите id пользователя: ");
-            int id = Integer.parseInt(consoleApp.getScanner().nextLine().trim());
-            consoleApp.getUserService().delete(id);
-            System.out.println("Сущность с id '" + id + "' удалена!");
-        } catch (Exception e) {
-            System.out.println("Ошибка: " + e.getMessage());
-        }
-        return new UserMenu();
+    public void printMenu() {
+        System.out.println("Выберите действие:");
+        descriptionsMap.forEach((key, value) ->
+                System.out.println(key + ". " + value));
     }
 }

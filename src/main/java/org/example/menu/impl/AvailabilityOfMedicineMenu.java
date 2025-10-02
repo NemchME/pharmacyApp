@@ -1,136 +1,58 @@
 package org.example.menu.impl;
 
 import org.example.ConsoleApp;
-import org.example.exception.EntityNotFoundException;
-import org.example.menu.CrudMenu;
+import org.example.command.Command;
+import org.example.command.mainMenu.MainMenuCommand;
+import org.example.command.availabilityOfMedicine.*;
 import org.example.menu.Menu;
-import org.example.model.AvailabilityOfMedicine;
+;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
-public class AvailabilityOfMedicineMenu implements Menu, CrudMenu {
-    
+public class AvailabilityOfMedicineMenu implements Menu {
+
+    private final Map<String, Command> commandsMap = new LinkedHashMap<>();
+    private final Map<String, String> descriptionsMap = new LinkedHashMap<>();
+
+    public AvailabilityOfMedicineMenu() {
+        commandsMap.put("1", new FindAllCommand());
+        commandsMap.put("2", new CreateCommand());
+        commandsMap.put("3", new ReadCommand());
+        commandsMap.put("4", new UpdateCommand());
+        commandsMap.put("5", new DeleteCommand());
+        commandsMap.put("6", new MainMenuCommand());
+        descriptionsMap.put("1", "Получить все данные о наличии препарата");
+        descriptionsMap.put("2", "Сохранить данные о наличии препарата");
+        descriptionsMap.put("3", "Найти данные о наличии препарата");
+        descriptionsMap.put("4", "Обновить данные о наличии препарата");
+        descriptionsMap.put("5", "Удалить данные о наличии препарата");
+        descriptionsMap.put("6", "Перейти в главное меню");
+
+    }
+
     @Override
-    public Menu execute(ConsoleApp consoleApp) {
+    public Menu show(ConsoleApp consoleApp) {
         while (true) {
             try {
-                System.out.println("""
-                    Выберите действие:
-                    1. Получить все данные о наличии препарата
-                    2. Сохранить данные о наличии препарата
-                    3. Найти данные о наличии препарата
-                    4. Обновить данные о наличии препарата
-                    5. Удалить данные о наличии препарата
-                    6. Перейти в главное меню
-                    """);
+                printMenu();
+                String choice = consoleApp.getScanner().nextLine().trim();
 
-                String choice = consoleApp.getScanner().nextLine();
-                return switch (choice) {
-                    case "1" -> findAllEntities(consoleApp);
-                    case "2" -> createEntity(consoleApp);
-                    case "3" -> readEntity(consoleApp);
-                    case "4" -> updateEntity(consoleApp);
-                    case "5" -> deleteEntity(consoleApp);
-                    case "6" -> new MainMenu();
-                    default -> throw new IllegalArgumentException("Неверный ввод! Введите число от 1 до 6.");
-                };
+                Command command = commandsMap.get(choice);
+
+                if (command == null) {
+                    throw new IllegalArgumentException("Неверный ввод! Введите число от 1 до " + commandsMap.size() +
+                            ".");
+                }
+            return command.execute(consoleApp);
             } catch (Exception e) {
                 System.out.println("Ошибка: " + e.getMessage());
             }
         }
     }
 
-    @Override
-    public Menu findAllEntities(ConsoleApp consoleApp) {
-        System.out.println(consoleApp.getAvailabilityOfMedicineService().findAll());
-        return new AvailabilityOfMedicineMenu();
-    }
-
-    @Override
-    public Menu createEntity(ConsoleApp consoleApp) {
-        try {
-            System.out.println("""
-                        Введите данные о наличии препарата через запятую:
-                        [pharmacy_id, medicine_id, price, quantily].
-                        Пример ввода: 0, 0, 10.0, 2
-                        """);
-            String[] entityArgs = consoleApp.getScanner().nextLine().split(",");
-
-            if (entityArgs.length != 4) {
-                throw new IllegalArgumentException(
-                        "Введите следующие поля: pharmacy_id, medicine_id, price, quantily");
-            }
-            AvailabilityOfMedicine entity = new AvailabilityOfMedicine(
-                    Integer.parseInt(entityArgs[0].trim()),
-                    Integer.parseInt(entityArgs[1].trim()),
-                    Float.parseFloat(entityArgs[2].trim()),
-                    Integer.parseInt(entityArgs[3].trim())
-            );
-            consoleApp.getAvailabilityOfMedicineService().save(entity);
-            System.out.println("Сущность сохранена с id: " + entity.getId());
-        } catch (IndexOutOfBoundsException e) {
-            System.out.println(
-                    "Ошибка: Введите следующие поля: pharmacy_id, medicine_id, price, quantily");
-        } catch (Exception e) {
-            System.out.println("Ошибка: " + e.getMessage());
-        }
-        return new AvailabilityOfMedicineMenu();
-    }
-
-    @Override
-    public Menu readEntity(ConsoleApp consoleApp) {
-        try {
-            System.out.println("Введите id данных о наличии препарата: ");
-            int id = Integer.parseInt(consoleApp.getScanner().nextLine().trim());
-            System.out.println(consoleApp.getAvailabilityOfMedicineService().findById(id));
-        } catch (EntityNotFoundException e) {
-            System.out.println(e.getMessage());
-
-        } catch (NumberFormatException e) {
-            System.out.println("Ошибка: " + e.getMessage());
-        }
-        return new AvailabilityOfMedicineMenu();
-    }
-
-    @Override
-    public Menu updateEntity(ConsoleApp consoleApp) {
-        try {
-            System.out.println("""
-                    Введите обновленные данные через запятую:
-                    [id, pharmacy_id, medicine_id, price, quantily].
-                    Пример ввода: 0, 0, 0, 10.0, 2
-                    """);
-            String[] entityArgs = consoleApp.getScanner().nextLine().split(",");
-            if (entityArgs.length != 5) {
-                throw new IllegalArgumentException(
-                        "Ошибка: Введите следующие поля: id, pharmacy_id, medicine_id, price, quantily");
-            }
-            AvailabilityOfMedicine entity = new AvailabilityOfMedicine(
-                    Integer.parseInt(entityArgs[0].trim()),
-                    Integer.parseInt(entityArgs[1].trim()),
-                    Integer.parseInt(entityArgs[2].trim()),
-                    Float.parseFloat(entityArgs[3].trim()),
-                    Integer.parseInt(entityArgs[4].trim())
-            );
-            consoleApp.getAvailabilityOfMedicineService().update(entity);
-            System.out.println("Сущность обновлена с id: " + entity.getId());
-        } catch (IndexOutOfBoundsException e) {
-            System.out.println(
-                    "Ошибка: Введите следующие поля: id, pharmacy_id, medicine_id, price, quantily");
-        } catch (Exception e) {
-            System.out.println("Ошибка: " + e.getMessage());
-        }
-        return new AvailabilityOfMedicineMenu();
-    }
-
-    @Override
-    public Menu deleteEntity(ConsoleApp consoleApp) {
-        try {
-            System.out.println("Введите id данных о наличии препарата: ");
-            int id = Integer.parseInt(consoleApp.getScanner().nextLine().trim());
-            consoleApp.getAvailabilityOfMedicineService().delete(id);
-            System.out.println("Сущность с id '" + id + "' удалена!");
-        } catch (Exception e) {
-            System.out.println("Ошибка: " + e.getMessage());
-        }
-        return new AvailabilityOfMedicineMenu();
+    public void printMenu() {
+        System.out.println("Выберите действие:");
+        descriptionsMap.forEach((key, value) ->
+                System.out.println(key + ". " + value));
     }
 }
