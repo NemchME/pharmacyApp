@@ -1,0 +1,15 @@
+package org.example.command.producer;
+
+import org.example.ConsoleApp;
+import org.example.command.Command;
+import org.example.menu.Menu;
+import org.example.menu.impl.ProducerMenu;
+
+public class FindAllCommand implements Command {
+
+    @Override
+    public Menu execute(ConsoleApp consoleApp) {
+        System.out.println(consoleApp.getProducerService().findAll());
+        return new ProducerMenu();
+    }
+}
