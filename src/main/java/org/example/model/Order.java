@@ -9,28 +9,32 @@ public class Order {
     private Integer userId;
     private Integer medicineId;
     private Integer pharmacyId;
-    private Integer quantily;
+    private Integer quantity;
     private String status;
     private Timestamp createdAt;
 
-    public Order(Integer id, Integer userId, Integer medicineId, Integer pharmacyId, Integer quantily, String status) {
+    public Order(Integer id, Integer userId, Integer medicineId, Integer pharmacyId, Integer quantity, String status) {
         this.id = id;
         this.userId = userId;
         this.medicineId = medicineId;
         this.pharmacyId = pharmacyId;
-        this.quantily = quantily;
+        this.quantity = quantity;
         this.status = status;
         this.createdAt = Timestamp.from(Instant.now());
     }
 
-    public Order(Integer userId, Integer medicineId, Integer pharmacyId, Integer quantily,
+    public Order(Integer userId, Integer medicineId, Integer pharmacyId, Integer quantity,
                  String status) {
         this.userId = userId;
         this.medicineId = medicineId;
         this.pharmacyId = pharmacyId;
-        this.quantily = quantily;
+        this.quantity = quantity;
         this.status = status;
         this.createdAt = Timestamp.from(Instant.now());
+    }
+
+    public Order() {
+
     }
 
     public Integer getId() {
@@ -65,12 +69,12 @@ public class Order {
         this.pharmacyId = pharmacyId;
     }
 
-    public Integer getQuantily() {
-        return quantily;
+    public Integer getQuantity() {
+        return quantity;
     }
 
-    public void setQuantily(Integer quantily) {
-        this.quantily = quantily;
+    public void setQuantity(Integer quantity) {
+        this.quantity = quantity;
     }
 
     public String getStatus() {
@@ -96,7 +100,7 @@ public class Order {
                 ", userId=" + userId +
                 ", medicineId=" + medicineId +
                 ", pharmacyId=" + pharmacyId +
-                ", quantily=" + quantily +
+                ", quantity=" + quantity +
                 ", status='" + status + '\'' +
                 ", createdAt=" + createdAt +
                 '}';
@@ -108,12 +112,12 @@ public class Order {
         Order order = (Order) o;
         return Objects.equals(id, order.id) && Objects.equals(userId, order.userId) &&
                 Objects.equals(medicineId, order.medicineId) && Objects.equals(pharmacyId, order.pharmacyId) &&
-                Objects.equals(quantily, order.quantily) && Objects.equals(status, order.status) &&
+                Objects.equals(quantity, order.quantity) && Objects.equals(status, order.status) &&
                 Objects.equals(createdAt, order.createdAt);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, userId, medicineId, pharmacyId, quantily, status, createdAt);
+        return Objects.hash(id, userId, medicineId, pharmacyId, quantity, status, createdAt);
     }
 }

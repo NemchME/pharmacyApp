@@ -1,15 +1,24 @@
 package org.example;
 
+import org.example.exception.DBException;
 import org.example.menu.Menu;
 import org.example.menu.impl.MainMenu;
 import org.example.model.*;
-import org.example.repository.impl.inmemory.*;
+import org.example.repository.impl.jdbc.*;
 import org.example.service.*;
+import org.example.sql.config.DBConnection;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.Scanner;
 
 public class ConsoleApp {
 
+    private final DBConnection connection = new DBConnection();
     private final AvailabilityOfMedicineService availabilityOfMedicineService;
     private final MedicineService medicineService;
     private final OrderService orderService;
@@ -20,18 +29,19 @@ public class ConsoleApp {
     private Menu menu = new MainMenu();
 
     public ConsoleApp() {
-        this.pharmacyService = new PharmacyService(new PharmacyRepositoryImpl());
-        this.producerService = new ProducerService(new ProducerRepositoryImpl());
-        this.userService = new UserService(new UserRepositoryImpl());
-        this.medicineService = new MedicineService(new MedicineRepositoryImpl(), this.producerService);
+        this.pharmacyService = new PharmacyService(new PharmacyRepositoryImpl(connection));
+        this.producerService = new ProducerService(new ProducerRepositoryImpl(connection));
+        this.userService = new UserService(new UserRepositoryImpl(connection));
+        this.medicineService = new MedicineService(new MedicineRepositoryImpl(connection), this.producerService);
         this.availabilityOfMedicineService = new AvailabilityOfMedicineService(
-                new AvailabilityRepositoryImpl(), this.pharmacyService, this.medicineService);
+                new AvailabilityOfMedicineRepositoryImpl(connection), this.pharmacyService, this.medicineService);
         this.orderService = new OrderService(
-                new OrderRepositoryImpl(), this.userService, this.medicineService, this.pharmacyService);
+                new OrderRepositoryImpl(connection), this.userService, this.medicineService, this.pharmacyService);
     }
 
     public void run() {
-        inputTestData();
+//        inputTestData();
+        executeSQLScripts();
         while (true) {
         menu = menu.show(this);
         }
@@ -70,6 +80,19 @@ public class ConsoleApp {
     }
 
 
+    private void executeSQLScripts() {
+        try (Statement statement = connection.getConnection().createStatement()) {
+
+            String sql = Files.readString(Path.of("src/main/java/org/example/sql/schema.sql"));
+            statement.execute(sql);
+            sql = Files.readString(Path.of("src/main/java/org/example/sql/data.sql"));
+            statement.execute(sql);
+        } catch (SQLException e) {
+            throw new DBException(e.getMessage(), e);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
     private void inputTestData() {
         Pharmacy pharmacy = new Pharmacy(
                 "Аптека", "ул. Пушкина", "220-98-29", "9-12",

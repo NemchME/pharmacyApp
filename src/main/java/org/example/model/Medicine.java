@@ -27,6 +27,10 @@ public class Medicine {
         this.producerId = producerId;
     }
 
+    public Medicine() {
+
+    }
+
     public int getId() {
         return id;
     }

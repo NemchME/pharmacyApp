@@ -9,25 +9,29 @@ public class AvailabilityOfMedicine {
     private Integer pharmacyId;
     private Integer medicineId;
     private Float price;
-    private Integer quantily;
+    private Integer quantity;
     private Timestamp updatedAt;
 
-    public AvailabilityOfMedicine(Integer id, Integer pharmacyId, Integer medicineId, Float price, Integer quantily) {
+    public AvailabilityOfMedicine(Integer id, Integer pharmacyId, Integer medicineId, Float price, Integer quantity) {
         this.id = id;
         this.pharmacyId = pharmacyId;
         this.medicineId = medicineId;
         this.price = price;
-        this.quantily = quantily;
+        this.quantity = quantity;
         this.updatedAt = Timestamp.from(Instant.now());
     }
 
     public AvailabilityOfMedicine(Integer pharmacyId, Integer medicineId, Float price,
-                                  Integer quantily) {
+                                  Integer quantity) {
         this.pharmacyId = pharmacyId;
         this.medicineId = medicineId;
         this.price = price;
-        this.quantily = quantily;
+        this.quantity = quantity;
         this.updatedAt = Timestamp.from(Instant.now());
+    }
+
+    public AvailabilityOfMedicine() {
+
     }
 
     public Integer getId() {
@@ -62,12 +66,12 @@ public class AvailabilityOfMedicine {
         this.price = price;
     }
 
-    public Integer getQuantily() {
-        return quantily;
+    public Integer getQuantity() {
+        return quantity;
     }
 
-    public void setQuantily(Integer quantily) {
-        this.quantily = quantily;
+    public void setQuantity(Integer quantity) {
+        this.quantity = quantity;
     }
 
     public Timestamp getUpdatedAt() {
@@ -85,7 +89,7 @@ public class AvailabilityOfMedicine {
                 ", pharmacyId=" + pharmacyId +
                 ", medicineId=" + medicineId +
                 ", price=" + price +
-                ", quantily=" + quantily +
+                ", quantity=" + quantity +
                 ", updatedAt=" + updatedAt +
                 '}';
     }
@@ -97,12 +101,12 @@ public class AvailabilityOfMedicine {
         return Objects.equals(id, that.id) && Objects.equals(pharmacyId, that.pharmacyId) &&
                 Objects.equals(medicineId, that.medicineId) &&
                 Objects.equals(price, that.price) &&
-                Objects.equals(quantily, that.quantily) &&
+                Objects.equals(quantity, that.quantity) &&
                 Objects.equals(updatedAt, that.updatedAt);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, pharmacyId, medicineId, price, quantily, updatedAt);
+        return Objects.hash(id, pharmacyId, medicineId, price, quantity, updatedAt);
     }
 }

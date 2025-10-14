@@ -6,7 +6,7 @@ import java.sql.SQLException;
 
 public class DBConnection {
 
-    public static Connection getConnection() {
+    public Connection getConnection() {
         try {
             return DriverManager.getConnection(
                     DBConfig.URL,

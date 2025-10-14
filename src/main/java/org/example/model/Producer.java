@@ -18,6 +18,10 @@ public class Producer {
         this.country = country;
     }
 
+    public Producer() {
+
+    }
+
     public Integer getId() {
         return id;
     }
