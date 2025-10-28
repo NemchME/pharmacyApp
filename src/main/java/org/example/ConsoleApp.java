@@ -41,7 +41,6 @@ public class ConsoleApp {
 
     public void run() {
 //        inputTestData();
-        executeSQLScripts();
         while (true) {
         menu = menu.show(this);
         }
@@ -80,19 +79,7 @@ public class ConsoleApp {
     }
 
 
-    private void executeSQLScripts() {
-        try (Statement statement = connection.getConnection().createStatement()) {
 
-            String sql = Files.readString(Path.of("src/main/java/org/example/sql/schema.sql"));
-            statement.execute(sql);
-            sql = Files.readString(Path.of("src/main/java/org/example/sql/data.sql"));
-            statement.execute(sql);
-        } catch (SQLException e) {
-            throw new DBException(e.getMessage(), e);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
     private void inputTestData() {
         Pharmacy pharmacy = new Pharmacy(
                 "Аптека", "ул. Пушкина", "220-98-29", "9-12",

@@ -13,18 +13,8 @@
 
 * [PostgreSQL](https://sbp.enterprisedb.com/getfile.jsp?fileid=1259789)
 
-2. Настройка базы данных
 
-Создайте базу данных со следующими данными:
-
-    URL = "jdbc:postgresql://localhost:5432/pharmacy_app"
-    USER = "postgres"
-    PASSWORD = "local"
-}
-
-
-
-3. Деплой в Tomcat
+2. Деплой в Tomcat
 
 Готовый WAR-файл находится в папке:
 

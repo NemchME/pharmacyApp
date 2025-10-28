@@ -1,7 +1,7 @@
 package org.example.sql.config;
 
 public class DBConfig {
-    public static final String URL = "jdbc:postgresql://localhost:5432/pharmacy_app";
-    public static final String USER = "postgres";
-    public static final String PASSWORD = "local";
+    public static final String URL = "jdbc:h2:~/pharmacy_app;DB_CLOSE_DELAY=-1;AUTO_SERVER=TRUE";
+    public static final String USER = "sa";
+    public static final String PASSWORD = "";
 }
