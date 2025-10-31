@@ -7,26 +7,26 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.example.context.AppContext;
-import org.example.model.Pharmacy;
-import org.example.service.PharmacyService;
+import org.example.model.Medicine;
+import org.example.service.MedicineService;
 
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 import java.util.logging.Logger;
 
-@WebServlet("/pharmacies")
-public class PharmacyServlet extends HttpServlet {
+@WebServlet("/medicines")
+public class MedicineServlet extends HttpServlet {
 
-    private static final Logger LOGGER = Logger.getLogger(PharmacyServlet.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(MedicineServlet.class.getName());
 
-    private PharmacyService pharmacyService;
+    private MedicineService medicineService;
 
     @Override
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
         try {
-            pharmacyService = AppContext.getInstance().getPharmacyService();
+            medicineService = AppContext.getInstance().getMedicineService();
             LOGGER.info("Запуск сервлета: " + this.getClass().getName());
         } catch (Exception e) {
             throw new ServletException("Не удалось инициализировать " + this.getClass().getName() + ": " +
@@ -41,20 +41,20 @@ public class PharmacyServlet extends HttpServlet {
         String action = req.getParameter("action");
 
         if (action == null || action.equals("list")) {
-            List<Pharmacy> pharmacies = pharmacyService.findAll();
-            req.setAttribute("pharmacies", pharmacies);
-            req.getRequestDispatcher("/pharmacy/list.jsp").forward(req, resp);
+            List<Medicine> pharmacies = medicineService.findAll();
+            req.setAttribute("medicines", pharmacies);
+            req.getRequestDispatcher("/medicine/list.jsp").forward(req, resp);
         } else if (action.equals("edit")) {
             Integer id = Integer.parseInt(req.getParameter("id"));
-            Optional<Pharmacy> pharmacy = Optional.ofNullable(pharmacyService.findById(id));
-            req.setAttribute("pharmacy", pharmacy.orElse(null));
-            req.getRequestDispatcher("/pharmacy/form.jsp").forward(req, resp);
+            Optional<Medicine> medicine = Optional.ofNullable(medicineService.findById(id));
+            req.setAttribute("medicine", medicine.orElse(null));
+            req.getRequestDispatcher("/medicine/form.jsp").forward(req, resp);
         } else if (action.equals("delete")) {
             Integer id = Integer.parseInt(req.getParameter("id"));
-            pharmacyService.delete(id);
-            resp.sendRedirect("pharmacies");
+            medicineService.delete(id);
+            resp.sendRedirect("medicines");
         } else if (action.equals("new")) {
-            req.getRequestDispatcher("/pharmacy/form.jsp").forward(req, resp);
+            req.getRequestDispatcher("/medicine/form.jsp").forward(req, resp);
         }
     }
 
@@ -63,21 +63,21 @@ public class PharmacyServlet extends HttpServlet {
             throws IOException {
 
         String idStr = req.getParameter("id");
-        String name = req.getParameter("name");
-        String address = req.getParameter("address");
-        String phone = req.getParameter("phone");
-        String workingHours = req.getParameter("workingHours");
-        String wayFromCenter = req.getParameter("wayFromCenter");
+        String tradeName = req.getParameter("tradeName");
+        String inn = req.getParameter("inn");
+        String dosage = req.getParameter("dosage");
+        String form = req.getParameter("form");
+        int producerId = Integer.parseInt(req.getParameter("producerId"));
 
-        Pharmacy pharmacy = new Pharmacy(name, address, phone, workingHours, wayFromCenter);
+        Medicine medicine = new Medicine(tradeName, inn, dosage, form, producerId);
 
         if (idStr == null || idStr.isBlank()) {
-            pharmacyService.save(pharmacy);
+            medicineService.save(medicine);
         } else {
-            pharmacy.setId(Integer.parseInt(idStr));
-            pharmacyService.update(pharmacy);
+            medicine.setId(Integer.parseInt(idStr));
+            medicineService.update(medicine);
         }
 
-        resp.sendRedirect("pharmacies");
+        resp.sendRedirect("medicines");
     }
 }

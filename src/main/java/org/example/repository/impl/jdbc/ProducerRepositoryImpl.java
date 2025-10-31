@@ -67,7 +67,7 @@ public class ProducerRepositoryImpl implements ProducerRepository {
 
     @Override
     public void update(Producer entity) {
-        String sql = "UPDATE producer SET name=?, address=?, phone=?, working_hours=?, way_from_center=?";
+        String sql = "UPDATE producer SET name=?, country=?";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setString(1, entity.getName());
             ps.setString(2, entity.getCountry());

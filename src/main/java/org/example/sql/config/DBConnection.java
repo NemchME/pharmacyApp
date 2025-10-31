@@ -6,9 +6,13 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.sql.*;
+import java.util.Enumeration;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class DBConnection implements AutoCloseable {
 
+    private static final Logger LOGGER = Logger.getLogger(DBConnection.class.getName());
     private Connection connection;
 
     public DBConnection() {
@@ -19,14 +23,16 @@ public class DBConnection implements AutoCloseable {
                     DBConfig.USER,
                     DBConfig.PASSWORD
             );
-            System.out.println("Успешное подключение к БД!");
+            LOGGER.info("Успешное подключение к БД!");
+
             if (isDatabaseEmpty()) {
                 executeSQLScripts();
-                System.out.println("База данных инициализирована.");
+                LOGGER.info("База данных инициализирована.");
             }
 
         } catch (Exception e) {
-            throw new RuntimeException("Ошибка подключения к базе данных: " + e.getMessage(), e);
+            LOGGER.log(Level.SEVERE, "Ошибка подключения к базе данных: " + e.getMessage(), e);
+            throw new RuntimeException("Ошибка подключения к базе данных", e);
         }
     }
 
@@ -36,28 +42,41 @@ public class DBConnection implements AutoCloseable {
 
     @Override
     public void close() {
-        if (connection != null) {
+
             try {
-                connection.close();
-                System.out.println("Соединение с БД закрыто.");
+                if (connection != null && !connection.isClosed()) {
+                    try (Statement stmt = connection.createStatement()) {
+                        stmt.execute("SHUTDOWN");
+                    } catch (Exception e) {
+                        LOGGER.warning(e.getMessage());
+                    }
+                    connection.close();
+                    LOGGER.info("Соединение с БД закрыто.");
+                }
             } catch (SQLException e) {
-                e.printStackTrace();
+                LOGGER.log(Level.WARNING, "Ошибка при закрытии соединения", e);
             }
-        }
+
+
+        deregisterDrivers();
     }
+
 
     private void executeSQLScripts() {
         try (Statement statement = getConnection().createStatement()) {
-            System.out.println("Запуск SQL-скриптов...");
-            String sql = Files.readString(Path.of("src/main/java/org/example/sql/schema.sql"));
-            statement.execute(sql);
-            sql = Files.readString(Path.of("src/main/java/org/example/sql/data.sql"));
-            statement.execute(sql);
-            System.out.println("SQL-скрипты успешно запущены!");
+            LOGGER.info("Запуск SQL-скриптов...");
+            String schemaSql = Files.readString(Path.of("src/main/java/org/example/sql/schema.sql"));
+            statement.execute(schemaSql);
+
+            String dataSql = Files.readString(Path.of("src/main/java/org/example/sql/data.sql"));
+            statement.execute(dataSql);
+
+            LOGGER.info("SQL-скрипты успешно выполнены!");
         } catch (SQLException e) {
+            LOGGER.log(Level.SEVERE, "Ошибка при выполнении SQL-скриптов", e);
             throw new DBException(e.getMessage(), e);
         } catch (IOException e) {
-            e.printStackTrace();
+            LOGGER.log(Level.SEVERE, "Ошибка при чтении SQL-файлов", e);
         }
     }
 
@@ -66,7 +85,21 @@ public class DBConnection implements AutoCloseable {
         try (Statement stmt = connection.createStatement();
              ResultSet rs = stmt.executeQuery(query)) {
             rs.next();
-            return rs.getInt(1) == 0;
+            boolean empty = rs.getInt(1) == 0;
+            return empty;
+        }
+    }
+
+    private void deregisterDrivers() {
+        Enumeration<Driver> drivers = DriverManager.getDrivers();
+        while (drivers.hasMoreElements()) {
+            Driver driver = drivers.nextElement();
+            try {
+                DriverManager.deregisterDriver(driver);
+                LOGGER.info("Драйвер отменен: " + driver.getClass().getName());
+            } catch (SQLException e) {
+                LOGGER.severe("Ошибка при отмене регистрации драйвера: " + driver.getClass().getName() + " - " + e.getMessage());
+            }
         }
     }
 }

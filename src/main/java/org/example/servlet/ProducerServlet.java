@@ -7,26 +7,26 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.example.context.AppContext;
-import org.example.model.Pharmacy;
-import org.example.service.PharmacyService;
+import org.example.model.Producer;
+import org.example.service.ProducerService;
 
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 import java.util.logging.Logger;
 
-@WebServlet("/pharmacies")
-public class PharmacyServlet extends HttpServlet {
+@WebServlet("/producers")
+public class ProducerServlet extends HttpServlet {
 
-    private static final Logger LOGGER = Logger.getLogger(PharmacyServlet.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(ProducerServlet.class.getName());
 
-    private PharmacyService pharmacyService;
+    private ProducerService producerService;
 
     @Override
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
         try {
-            pharmacyService = AppContext.getInstance().getPharmacyService();
+            producerService = AppContext.getInstance().getProducerService();
             LOGGER.info("Запуск сервлета: " + this.getClass().getName());
         } catch (Exception e) {
             throw new ServletException("Не удалось инициализировать " + this.getClass().getName() + ": " +
@@ -41,20 +41,20 @@ public class PharmacyServlet extends HttpServlet {
         String action = req.getParameter("action");
 
         if (action == null || action.equals("list")) {
-            List<Pharmacy> pharmacies = pharmacyService.findAll();
-            req.setAttribute("pharmacies", pharmacies);
-            req.getRequestDispatcher("/pharmacy/list.jsp").forward(req, resp);
+            List<Producer> producers = producerService.findAll();
+            req.setAttribute("producers", producers);
+            req.getRequestDispatcher("/producer/list.jsp").forward(req, resp);
         } else if (action.equals("edit")) {
             Integer id = Integer.parseInt(req.getParameter("id"));
-            Optional<Pharmacy> pharmacy = Optional.ofNullable(pharmacyService.findById(id));
-            req.setAttribute("pharmacy", pharmacy.orElse(null));
-            req.getRequestDispatcher("/pharmacy/form.jsp").forward(req, resp);
+            Optional<Producer> producer = Optional.ofNullable(producerService.findById(id));
+            req.setAttribute("producer", producer.orElse(null));
+            req.getRequestDispatcher("/producer/form.jsp").forward(req, resp);
         } else if (action.equals("delete")) {
             Integer id = Integer.parseInt(req.getParameter("id"));
-            pharmacyService.delete(id);
-            resp.sendRedirect("pharmacies");
+            producerService.delete(id);
+            resp.sendRedirect("producers");
         } else if (action.equals("new")) {
-            req.getRequestDispatcher("/pharmacy/form.jsp").forward(req, resp);
+            req.getRequestDispatcher("/producer/form.jsp").forward(req, resp);
         }
     }
 
@@ -64,20 +64,17 @@ public class PharmacyServlet extends HttpServlet {
 
         String idStr = req.getParameter("id");
         String name = req.getParameter("name");
-        String address = req.getParameter("address");
-        String phone = req.getParameter("phone");
-        String workingHours = req.getParameter("workingHours");
-        String wayFromCenter = req.getParameter("wayFromCenter");
+        String country = req.getParameter("country");
 
-        Pharmacy pharmacy = new Pharmacy(name, address, phone, workingHours, wayFromCenter);
+        Producer producer = new Producer(name, country);
 
         if (idStr == null || idStr.isBlank()) {
-            pharmacyService.save(pharmacy);
+            producerService.save(producer);
         } else {
-            pharmacy.setId(Integer.parseInt(idStr));
-            pharmacyService.update(pharmacy);
+            producer.setId(Integer.parseInt(idStr));
+            producerService.update(producer);
         }
 
-        resp.sendRedirect("pharmacies");
+        resp.sendRedirect("producers");
     }
 }

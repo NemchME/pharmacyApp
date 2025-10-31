@@ -1,27 +1,26 @@
-package org.example;
+package org.example.context;
 
-import org.example.menu.Menu;
-import org.example.menu.impl.MainMenu;
-import org.example.model.*;
 import org.example.repository.impl.jdbc.*;
 import org.example.service.*;
 import org.example.sql.config.DBConnection;
 
-import java.util.Scanner;
+import java.sql.SQLException;
 
-public class ConsoleApp {
 
-    private final DBConnection connection = new DBConnection();
+public class AppContext implements AutoCloseable {
+
+    private static AppContext INSTANCE;
+
     private final AvailabilityOfMedicineService availabilityOfMedicineService;
     private final MedicineService medicineService;
     private final OrderService orderService;
     private final PharmacyService pharmacyService;
     private final ProducerService producerService;
     private final UserService userService;
-    private final Scanner scanner = new Scanner(System.in);
-    private Menu menu = new MainMenu();
+    private final DBConnection connection;
 
-    public ConsoleApp() {
+    private AppContext() {
+        connection = new DBConnection();
         this.pharmacyService = new PharmacyService(new PharmacyRepositoryImpl(connection));
         this.producerService = new ProducerService(new ProducerRepositoryImpl(connection));
         this.userService = new UserService(new UserRepositoryImpl(connection));
@@ -32,10 +31,16 @@ public class ConsoleApp {
                 new OrderRepositoryImpl(connection), this.userService, this.medicineService, this.pharmacyService);
     }
 
-    public void run() {
-        while (true) {
-            menu = menu.show(this);
+    @Override
+    public void close() throws SQLException {
+        connection.close();
+    }
+
+    public static synchronized AppContext getInstance() {
+        if (INSTANCE == null) {
+            INSTANCE = new AppContext();
         }
+        return INSTANCE;
     }
 
     public AvailabilityOfMedicineService getAvailabilityOfMedicineService() {
@@ -62,33 +67,7 @@ public class ConsoleApp {
         return userService;
     }
 
-    public Scanner getScanner() {
-        return scanner;
-    }
-
-    public Menu getMenu() {
-        return menu;
-    }
-
-
-    private void inputTestData() {
-        Pharmacy pharmacy = new Pharmacy(
-                "Аптека", "ул. Пушкина", "220-98-29", "9-12",
-                "Поверните направо");
-        Producer producer = new Producer("Производитель №1", "Россия");
-        User user = new User("Пользователь", "Пароль", "mail@mail.ru", "юзер");
-        Medicine medicine = new Medicine("лекарство", "инн", "20 мг", "форма", 0);
-        AvailabilityOfMedicine availabilityOfMedicine = new AvailabilityOfMedicine(0, 0, 100.0f, 5);
-        Order order = new Order(0, 0, 0, 50, "Создан");
-        pharmacyService.save(pharmacy);
-        producerService.save(producer);
-        userService.save(user);
-        medicineService.save(medicine);
-        availabilityOfMedicineService.save(availabilityOfMedicine);
-        orderService.save(order);
-    }
-
-    public static void main(String[] args) {
-        new ConsoleApp().run();
+    public DBConnection getConnection() {
+        return connection;
     }
 }

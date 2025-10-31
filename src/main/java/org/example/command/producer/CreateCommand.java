@@ -13,7 +13,7 @@ public class CreateCommand implements Command {
     public Menu execute(ConsoleApp consoleApp) {
         try {
             System.out.println("""
-                    Введите данные о пользователе через запятую:
+                    Введите данные о производителе через запятую:
                     [name, country].
                     Пример ввода: Фарма, Германия
                     """);

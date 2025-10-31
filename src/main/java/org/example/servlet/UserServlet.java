@@ -7,26 +7,26 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.example.context.AppContext;
-import org.example.model.Pharmacy;
-import org.example.service.PharmacyService;
+import org.example.model.User;
+import org.example.service.UserService;
 
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 import java.util.logging.Logger;
 
-@WebServlet("/pharmacies")
-public class PharmacyServlet extends HttpServlet {
+@WebServlet("/users")
+public class UserServlet extends HttpServlet {
 
-    private static final Logger LOGGER = Logger.getLogger(PharmacyServlet.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(UserServlet.class.getName());
 
-    private PharmacyService pharmacyService;
+    private UserService userService;
 
     @Override
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
         try {
-            pharmacyService = AppContext.getInstance().getPharmacyService();
+            userService = AppContext.getInstance().getUserService();
             LOGGER.info("Запуск сервлета: " + this.getClass().getName());
         } catch (Exception e) {
             throw new ServletException("Не удалось инициализировать " + this.getClass().getName() + ": " +
@@ -41,20 +41,20 @@ public class PharmacyServlet extends HttpServlet {
         String action = req.getParameter("action");
 
         if (action == null || action.equals("list")) {
-            List<Pharmacy> pharmacies = pharmacyService.findAll();
-            req.setAttribute("pharmacies", pharmacies);
-            req.getRequestDispatcher("/pharmacy/list.jsp").forward(req, resp);
+            List<User> users = userService.findAll();
+            req.setAttribute("users", users);
+            req.getRequestDispatcher("/user/list.jsp").forward(req, resp);
         } else if (action.equals("edit")) {
             Integer id = Integer.parseInt(req.getParameter("id"));
-            Optional<Pharmacy> pharmacy = Optional.ofNullable(pharmacyService.findById(id));
-            req.setAttribute("pharmacy", pharmacy.orElse(null));
-            req.getRequestDispatcher("/pharmacy/form.jsp").forward(req, resp);
+            Optional<User> user = Optional.ofNullable(userService.findById(id));
+            req.setAttribute("user", user.orElse(null));
+            req.getRequestDispatcher("/user/form.jsp").forward(req, resp);
         } else if (action.equals("delete")) {
             Integer id = Integer.parseInt(req.getParameter("id"));
-            pharmacyService.delete(id);
-            resp.sendRedirect("pharmacies");
+            userService.delete(id);
+            resp.sendRedirect("users");
         } else if (action.equals("new")) {
-            req.getRequestDispatcher("/pharmacy/form.jsp").forward(req, resp);
+            req.getRequestDispatcher("/user/form.jsp").forward(req, resp);
         }
     }
 
@@ -63,21 +63,20 @@ public class PharmacyServlet extends HttpServlet {
             throws IOException {
 
         String idStr = req.getParameter("id");
-        String name = req.getParameter("name");
-        String address = req.getParameter("address");
-        String phone = req.getParameter("phone");
-        String workingHours = req.getParameter("workingHours");
-        String wayFromCenter = req.getParameter("wayFromCenter");
+        String username = req.getParameter("username");
+        String passwordHash = req.getParameter("passwordHash");
+        String email = req.getParameter("email");
+        String role = req.getParameter("role");
 
-        Pharmacy pharmacy = new Pharmacy(name, address, phone, workingHours, wayFromCenter);
+        User user = new User(username, passwordHash, email, role);
 
         if (idStr == null || idStr.isBlank()) {
-            pharmacyService.save(pharmacy);
+            userService.save(user);
         } else {
-            pharmacy.setId(Integer.parseInt(idStr));
-            pharmacyService.update(pharmacy);
+            user.setId(Integer.parseInt(idStr));
+            userService.update(user);
         }
 
-        resp.sendRedirect("pharmacies");
+        resp.sendRedirect("users");
     }
 }
