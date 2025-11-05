@@ -41,7 +41,17 @@ public class UserServlet extends HttpServlet {
         String action = req.getParameter("action");
 
         if (action == null || action.equals("list")) {
-            List<User> users = userService.findAll();
+            String search = req.getParameter("search");
+            String sort = req.getParameter("sort");
+            String comparator = req.getParameter("comparator");
+            List<User> users;
+            if (search != null) {
+                users = userService.filter(search);
+            } else if (sort != null && comparator != null) {
+                users = userService.sort(sort, comparator);
+            } else {
+                users = userService.findAll();
+            }
             req.setAttribute("users", users);
             req.getRequestDispatcher("/user/list.jsp").forward(req, resp);
         } else if (action.equals("edit")) {

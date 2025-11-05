@@ -7,6 +7,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.example.context.AppContext;
+import org.example.model.Pharmacy;
 import org.example.model.Producer;
 import org.example.service.ProducerService;
 
@@ -41,7 +42,17 @@ public class ProducerServlet extends HttpServlet {
         String action = req.getParameter("action");
 
         if (action == null || action.equals("list")) {
-            List<Producer> producers = producerService.findAll();
+            String search = req.getParameter("search");
+            String sort = req.getParameter("sort");
+            String comparator = req.getParameter("comparator");
+            List<Producer> producers;
+            if (search != null) {
+                producers = producerService.filter(search);
+            } else if (sort != null && comparator != null) {
+                producers = producerService.sort(sort, comparator);
+            } else {
+                producers = producerService.findAll();
+            }
             req.setAttribute("producers", producers);
             req.getRequestDispatcher("/producer/list.jsp").forward(req, resp);
         } else if (action.equals("edit")) {

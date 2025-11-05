@@ -29,6 +29,16 @@ public class ProducerRepositoryImpl implements ProducerRepository {
     }
 
     @Override
+    public List<Producer> filter(String search) {
+        return List.of();
+    }
+
+    @Override
+    public List<Producer> sort(String sort, String comparator) {
+        return List.of();
+    }
+
+    @Override
     public void update(Producer entity) {
         storageMap.put(entity.getId(), entity);
     }

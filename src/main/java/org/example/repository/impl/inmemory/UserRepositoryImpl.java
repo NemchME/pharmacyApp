@@ -30,6 +30,16 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
+    public List<User> filter(String search) {
+        return List.of();
+    }
+
+    @Override
+    public List<User> sort(String sort, String comparator) {
+        return List.of();
+    }
+
+    @Override
     public void update(User entity) {
         storageMap.put(entity.getId(), entity);
     }

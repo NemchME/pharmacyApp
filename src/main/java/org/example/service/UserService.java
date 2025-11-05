@@ -27,9 +27,17 @@ public class UserService {
         return userRepository.findAll();
     }
 
+    public List<User> filter(String search) {
+        return userRepository.filter(search);
+    }
+
+    public List<User> sort(String sort, String comparator) {
+
+        return userRepository.sort(sort, comparator);
+    }
+
     public void update(User user) {
-        if (findById(user.getId()) != null);
-        {
+        if (findById(user.getId()) != null) {
             userRepository.update(user);
         }
     }

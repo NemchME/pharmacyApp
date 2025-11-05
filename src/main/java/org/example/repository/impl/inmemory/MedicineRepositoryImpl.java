@@ -31,6 +31,16 @@ public class MedicineRepositoryImpl implements MedicineRepository {
     }
 
     @Override
+    public List<Medicine> filter(String search) {
+        return List.of();
+    }
+
+    @Override
+    public List<Medicine> sort(String sort, String comparator) {
+        return List.of();
+    }
+
+    @Override
     public void update(Medicine entity) {
         storageMap.put(entity.getId(), entity);
     }

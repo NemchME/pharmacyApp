@@ -2,26 +2,54 @@
 
 <html>
 <head><title>Форма пользователя</title></head>
+<body bgcolor="#e6f2ff">
 <body>
-<p><a href="availabilityOfMedicines">AvailabilityOfMedicines </a></p>
-<p><a href="medicines">Medicine </a></p>
-<p><a href="orders">Order </a></p>
-<p><a href="pharmacies">Pharmacy </a></p>
-<p><a href="producers">Producer </a></p>
-<p><a href="users">User<br></a></p>
-<h1>${user != null ? "Редактирование пользователя" : "Добавление пользователя"}</h1>
+<div align="center" style="margin-bottom: 20px;">
+    <table border="0" cellpadding="8" bgcolor="#cce5ff">
+        <tr>
+            <td><a href="availabilityOfMedicines"><b>AvailabilityOfMedicines</b></a></td>
+            <td><a href="medicines"><b>Medicine</b></a></td>
+            <td><a href="orders"><b>Order</b></a></td>
+            <td><a href="pharmacies"><b>Pharmacy</b></a></td>
+            <td><a href="producers"><b>Producer</b></a></td>
+            <td><a href="users"><b>User</b></a></td>
+        </tr>
+    </table>
+</div>
 
+
+<div align="center">
+<h1>${user != null ? "Редактирование пользователя" : "Добавление пользователя"}</h1>
 <form action="users" method="post">
     <input type="hidden" name="id" value="${user.id}" />
 
-    Никнейм: <input type="text" name="name" value="${user.name}" required><br>
-    Пароль: <input type="password" name="country" value="${user.country}" required><br>
-    Эл. почта: <input type="text" name="email" value="${user.email}" required><br>
-    Роль: <input type="text" name="name" value="${user.role}" required><br>
-    <input type="submit" value="Сохранить">
+<table border="0" cellpadding="6">
+        <tr>
+            <td align="right"><b>Никнейм:</b></td>
+            <td><input type="text" name="username" value="${user.username}" size="40" required></td>
+        </tr>
+        <tr>
+            <td align="right"><b>Пароль:</b></td>
+            <td><input type="password" name="country" value="${user.country}" size="40" required></td>
+        </tr>
+        <tr>
+            <td align="right"><b>Эл. почта:</b></td>
+            <td><input type="text" name="email" value="${user.email}" size="40" required></td>
+        </tr>
+        <tr>
+            <td align="right"><b>Роль:</b></td>
+            <td><input type="text" name="name" value="${user.role}" size="40" required></td>
+        </tr>
+        <tr>
+            <td colspan="2" align="center">
+                <input type="submit" value="Сохранить">
+            </td>
+        </tr>
+    </table>
 </form>
 
 <br>
-<a href="users">Назад к списку</a>
+<a href="users">Вернуться к списку пользователей</a>
+</div>
 </body>
 </html>

@@ -1,6 +1,7 @@
 package org.example.service;
 
 import org.example.exception.EntityNotFoundException;
+import org.example.model.Pharmacy;
 import org.example.model.Producer;
 import org.example.repository.ProducerRepository;
 
@@ -32,6 +33,15 @@ public class ProducerService {
         if (findById(producer.getId()) != null) {
             producerRepository.update(producer);
         }
+    }
+
+    public List<Producer> filter(String search) {
+        return producerRepository.filter(search);
+    }
+
+    public List<Producer> sort(String sort, String comparator) {
+
+        return producerRepository.sort(sort, comparator);
     }
 
     public void delete(Integer id) {

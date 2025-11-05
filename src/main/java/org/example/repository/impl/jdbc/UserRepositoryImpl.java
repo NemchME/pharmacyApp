@@ -66,6 +66,58 @@ public class UserRepositoryImpl implements UserRepository {
         return userList;
     }
 
+    @Override
+    public List<User> filter(String search) {
+        List<User> users = new ArrayList<>();
+        String sql = "SELECT * FROM users " +
+                "WHERE LOWER(CAST(id AS VARCHAR)) LIKE LOWER(?) OR LOWER(username) LIKE LOWER(?) " +
+                "OR LOWER(email) LIKE LOWER(?) OR LOWER(role) LIKE LOWER(?)";
+
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            String pattern = "%" + search + "%";
+
+            for (int i = 1; i <= 4; i++) {
+                ps.setString(i, pattern);
+            }
+
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    users.add(mapRow(rs));
+                }
+            }
+        } catch (SQLException e) {
+            throw new DBException("Ошибка при поиске пользователей: " + e.getMessage(), e);
+        }
+        return users;
+    }
+
+    @Override
+    public List<User> sort(String sort, String comparator) {
+        List<User> users = new ArrayList<>();
+
+        String orderBy = switch (sort) {
+            case "username" -> "username";
+            case "email" -> "email";
+            case "role" -> "role";
+            default -> "id";
+        };
+
+        String direction = "desc".equalsIgnoreCase(comparator) ? "DESC" : "ASC";
+
+        String sql = "SELECT * FROM user " +
+                "ORDER BY " + orderBy + " " + direction;
+
+        try (PreparedStatement ps = connection.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) {
+                users.add(mapRow(rs));
+            }
+        } catch (SQLException e) {
+            throw new DBException("Ошибка при сортировке пользователей: " + e.getMessage(), e);
+        }
+        return users;
+    }
+
 
     @Override
     public void update(User entity) {
@@ -83,7 +135,7 @@ public class UserRepositoryImpl implements UserRepository {
 
     @Override
     public void delete(Integer id) {
-        String sql = "DELETE FROM user WHERE id = ?";
+        String sql = "DELETE FROM users WHERE id = ?";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setInt(1, id);
             ps.executeUpdate();

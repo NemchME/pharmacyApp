@@ -30,6 +30,16 @@ public class PharmacyRepositoryImpl implements PharmacyRepository {
     }
 
     @Override
+    public List<Pharmacy> filter(String search) {
+        return List.of();
+    }
+
+    @Override
+    public List<Pharmacy> sort(String sort, String comparator) {
+        return List.of();
+    }
+
+    @Override
     public void update(Pharmacy entity) {
         storageMap.put(entity.getId(), entity);
     }

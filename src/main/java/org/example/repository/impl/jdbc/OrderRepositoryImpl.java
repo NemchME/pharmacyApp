@@ -17,7 +17,7 @@ public class OrderRepositoryImpl implements OrderRepository {
     public OrderRepositoryImpl(DBConnection dbConnection) {
         this.connection = dbConnection.getConnection();
     }
-    
+
     @Override
     public void save(Order entity) {
         String sql = "INSERT INTO orders (user_id, medicine_id, pharmacy_id, quantity, status) " +
@@ -65,6 +65,64 @@ public class OrderRepositoryImpl implements OrderRepository {
             throw new DBException(e.getMessage(), e);
         }
         return orderList;
+    }
+
+    @Override
+    public List<Order> filter(String search) {
+        List<Order> orders = new ArrayList<>();
+        String sql = "SELECT * FROM orders " +
+                "WHERE LOWER(CAST(id AS VARCHAR)) LIKE LOWER(?) OR LOWER(CAST(user_id AS VARCHAR)) LIKE LOWER(?) " +
+                "OR LOWER(CAST(medicine_id AS VARCHAR)) LIKE LOWER(?) OR LOWER(CAST(pharmacy_id AS VARCHAR)) LIKE LOWER(?) " +
+                "OR LOWER(CAST(quantity AS VARCHAR)) LIKE LOWER(?) OR LOWER(status) LIKE LOWER(?) " +
+                "OR LOWER(CAST(created_at AS VARCHAR)) LIKE LOWER(?)";
+
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            String pattern = "%" + search + "%";
+
+            for (int i = 1; i <= 7; i++) {
+                ps.setString(i, pattern);
+            }
+
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    orders.add(mapRow(rs));
+                }
+            }
+        } catch (SQLException e) {
+            throw new DBException("Ошибка при поиске заказов: " + e.getMessage(), e);
+        }
+        return orders;
+    }
+
+    @Override
+    public List<Order> sort(String sort, String comparator) {
+        List<Order> orders = new ArrayList<>();
+
+
+        String orderBy = switch (sort) {
+            case "userId" -> "user_id";
+            case "medicineId" -> "medicine_id";
+            case "pharmacyId" -> "pharmacy_id";
+            case "quantity" -> "quantity";
+            case "status" -> "status";
+            case "createdAt" -> "created_at";
+            default -> "id";
+        };
+
+        String direction = "desc".equalsIgnoreCase(comparator) ? "DESC" : "ASC";
+
+        String sql = "SELECT * FROM orders " +
+                "ORDER BY " + orderBy + " " + direction;
+
+        try (PreparedStatement ps = connection.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) {
+                orders.add(mapRow(rs));
+            }
+        } catch (SQLException e) {
+            throw new DBException("Ошибка при сортировке заказов: " + e.getMessage(), e);
+        }
+        return orders;
     }
 
 

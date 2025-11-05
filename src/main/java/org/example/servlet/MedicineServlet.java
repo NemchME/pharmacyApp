@@ -41,8 +41,18 @@ public class MedicineServlet extends HttpServlet {
         String action = req.getParameter("action");
 
         if (action == null || action.equals("list")) {
-            List<Medicine> pharmacies = medicineService.findAll();
-            req.setAttribute("medicines", pharmacies);
+            String search = req.getParameter("search");
+            String sort = req.getParameter("sort");
+            String comparator = req.getParameter("comparator");
+            List<Medicine> medicines;
+            if (search != null) {
+                medicines = medicineService.filter(search);
+            } else if (sort != null && comparator != null) {
+                medicines = medicineService.sort(sort, comparator);
+            } else {
+                medicines = medicineService.findAll();
+            }
+            req.setAttribute("medicines", medicines);
             req.getRequestDispatcher("/medicine/list.jsp").forward(req, resp);
         } else if (action.equals("edit")) {
             Integer id = Integer.parseInt(req.getParameter("id"));

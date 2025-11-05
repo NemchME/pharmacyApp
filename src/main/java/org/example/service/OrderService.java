@@ -25,7 +25,7 @@ public class OrderService {
 
     public void save(Order order) {
         if (checkForeignKeys(order.getUserId(), order.getMedicineId(), order.getPharmacyId())) {
-        orderRepository.save(order);
+            orderRepository.save(order);
         }
     }
 
@@ -37,6 +37,15 @@ public class OrderService {
 
     public List<Order> findAll() {
         return orderRepository.findAll();
+    }
+
+    public List<Order> filter(String search) {
+        return orderRepository.filter(search);
+    }
+
+    public List<Order> sort(String sort, String comparator) {
+
+        return orderRepository.sort(sort, comparator);
     }
 
     public void update(Order order) {

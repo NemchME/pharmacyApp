@@ -64,6 +64,56 @@ public class ProducerRepositoryImpl implements ProducerRepository {
         return producerList;
     }
 
+    @Override
+    public List<Producer> filter(String search) {
+        List<Producer> producers = new ArrayList<>();
+        String sql = "SELECT * FROM producer " +
+                "WHERE LOWER(CAST(id AS VARCHAR)) LIKE LOWER(?) OR LOWER(name) LIKE LOWER(?) " +
+                "OR LOWER(country) LIKE LOWER(?)";
+
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            String pattern = "%" + search + "%";
+            for (int i = 1; i <= 3; i++) {
+                ps.setString(i, pattern);
+            }
+
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    producers.add(mapRow(rs));
+                }
+            }
+        } catch (SQLException e) {
+            throw new DBException("Ошибка при поиске производителей: " + e.getMessage(), e);
+        }
+        return producers;
+    }
+
+    @Override
+    public List<Producer> sort(String sort, String comparator) {
+        List<Producer> producers = new ArrayList<>();
+
+        String orderBy = switch (sort) {
+            case "name" -> "name";
+            case "country" -> "country";
+            default -> "id";
+        };
+
+        String direction = "desc".equalsIgnoreCase(comparator) ? "DESC" : "ASC";
+
+        String sql = "SELECT * FROM producer " +
+                "ORDER BY " + orderBy + " " + direction;
+
+        try (PreparedStatement ps = connection.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) {
+                producers.add(mapRow(rs));
+            }
+        } catch (SQLException e) {
+            throw new DBException("Ошибка при сортировке производителей: " + e.getMessage(), e);
+        }
+        return producers;
+    }
+
 
     @Override
     public void update(Producer entity) {

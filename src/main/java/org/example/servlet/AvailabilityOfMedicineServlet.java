@@ -41,7 +41,17 @@ public class AvailabilityOfMedicineServlet extends HttpServlet {
         String action = req.getParameter("action");
 
         if (action == null || action.equals("list")) {
-            List<AvailabilityOfMedicine> availabilityOfMedicines = availabilityOfMedicineService.findAll();
+            String search = req.getParameter("search");
+            String sort = req.getParameter("sort");
+            String comparator = req.getParameter("comparator");
+            List<AvailabilityOfMedicine> availabilityOfMedicines;
+            if (search != null) {
+                availabilityOfMedicines = availabilityOfMedicineService.filter(search);
+            } else if (sort != null && comparator != null) {
+                availabilityOfMedicines = availabilityOfMedicineService.sort(sort, comparator);
+            } else {
+                availabilityOfMedicines = availabilityOfMedicineService.findAll();
+            }
             req.setAttribute("availabilityOfMedicines", availabilityOfMedicines);
             req.getRequestDispatcher("/availabilityOfMedicine/list.jsp").forward(req, resp);
         } else if (action.equals("edit")) {

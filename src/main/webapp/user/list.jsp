@@ -3,30 +3,68 @@
 
 <html>
 <head><title>Список пользователей</title></head>
+<body bgcolor="#e6f2ff">
 <body>
-<p><a href="availabilityOfMedicines">AvailabilityOfMedicines </a></p>
-<p><a href="medicines">Medicine </a></p>
-<p><a href="orders">Order </a></p>
-<p><a href="pharmacies">Pharmacy </a></p>
-<p><a href="producers">Producer </a></p>
-<p><a href="users">User<br></a></p>
-<h1>Список пользователей</h1>
+<div align="center" style="margin-bottom: 20px;">
+    <table border="0" cellpadding="8" bgcolor="#cce5ff">
+        <tr>
+            <td><a href="availabilityOfMedicines"><b>AvailabilityOfMedicines</b></a></td>
+            <td><a href="medicines"><b>Medicine</b></a></td>
+            <td><a href="orders"><b>Order</b></a></td>
+            <td><a href="pharmacies"><b>Pharmacy</b></a></td>
+            <td><a href="producers"><b>Producer</b></a></td>
+            <td><a href="users"><b>User</b></a></td>
+        </tr>
+    </table>
+</div>
 
-<a href="users?action=new">Добавить пользователя</a>
-<br><br>
+<div align="right">
+    <h2>Поиск по слову</h2>
+    <form action="users" method="get">
+        <input type="hidden" name="action" value="list"/>
+        <input type="text" name="search" placeholder="Введите слово для поиска" value="${param.search}"/>
+
+        <input type="submit" value="Применить"/>
+    </form>
+
+    <h2>Сортировка</h2>
+    <form action="users" method="get">
+        <select name="sort">
+                    <option value="">По ID</option>
+                    <option value="nickname" ${param.sort == 'nickname' ? 'selected' : ''}>По никнейму</option>
+                    <option value="phone" ${param.sort == 'phone' ? 'selected' : ''}>По телефону</option>
+                    <option value="email" ${param.sort == 'email' ? 'selected' : ''}>По эл. почте</option>
+                    <option value="role" ${param.sort == 'role' ? 'selected' : ''}>По роли</option>
+        </select>
+        <select name="comparator">
+            <option value="asc" ${param.comparator == 'asc' ? 'selected' : ''}>По возрастанию</option>
+            <option value="desc" ${param.comparator == 'desc' ? 'selected' : ''}>По убыванию</option>
+        </select>
+        <input type="submit" value="Применить"/>
+    </form
+</div>
+    <br/>
+<div align="center">
+
+<h1>Список пользователей</h1>
+    <a href="users?action=new">
+        <button type="button" style="background-color: lightgreen; padding: 5px 10px;"><b>Добавить пользователя</b></button>
+    </a>
+</div>
+
+<br/>
 
 <table border="1" cellpadding="6">
     <tr>
-        <th>ID</th><th>Никнейм</th><th>Пароль</th><th>Эл. почта</th><th>Роль</th>
+        <th>ID</th><th>Никнейм</th><th>Эл. почта</th><th>Роль</th>
     </tr>
 
     <c:forEach var="user" items="${users}">
         <tr>
-            <td>'${user.id}</td>
-            <td>'${user.username}</td>
-            <td>'${user.passwordHash}</td>
-            <td>'${user.email}</td>
-            <td>'${user.role}</td>
+            <td>${user.id}</td>
+            <td>${user.username}</td>
+            <td>${user.email}</td>
+            <td>${user.role}</td>
             <td>
                 <a href="users?action=edit&id=${user.id}">Редактировать</a> |
                 <a href="users?action=delete&id=${user.id}">Удалить</a>

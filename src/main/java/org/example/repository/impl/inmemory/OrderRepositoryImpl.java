@@ -30,6 +30,16 @@ public class OrderRepositoryImpl implements OrderRepository {
     }
 
     @Override
+    public List<Order> filter(String search) {
+        return List.of();
+    }
+
+    @Override
+    public List<Order> sort(String sort, String comparator) {
+        return List.of();
+    }
+
+    @Override
     public void update(Order entity) {
         storageMap.put(entity.getId(), entity);
     }

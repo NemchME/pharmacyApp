@@ -18,9 +18,9 @@ public class MedicineService {
     }
 
     public void save(Medicine medicine) {
-         if (checkForeignKey(medicine.getProducerId())) {
-             medicineRepository.save(medicine);
-         }
+        if (checkForeignKey(medicine.getProducerId())) {
+            medicineRepository.save(medicine);
+        }
     }
 
     public Medicine findById(Integer id) {
@@ -31,6 +31,15 @@ public class MedicineService {
 
     public List<Medicine> findAll() {
         return medicineRepository.findAll();
+    }
+
+    public List<Medicine> filter(String search) {
+        return medicineRepository.filter(search);
+    }
+
+    public List<Medicine> sort(String sort, String comparator) {
+
+        return medicineRepository.sort(sort, comparator);
     }
 
     public void update(Medicine medicine) {

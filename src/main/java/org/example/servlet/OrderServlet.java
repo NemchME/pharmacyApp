@@ -41,7 +41,17 @@ public class OrderServlet extends HttpServlet {
         String action = req.getParameter("action");
 
         if (action == null || action.equals("list")) {
-            List<Order> orders = orderService.findAll();
+            String search = req.getParameter("search");
+            String sort = req.getParameter("sort");
+            String comparator = req.getParameter("comparator");
+            List<Order> orders;
+            if (search != null) {
+                orders = orderService.filter(search);
+            } else if (sort != null && comparator != null) {
+                orders = orderService.sort(sort, comparator);
+            } else {
+                orders = orderService.findAll();
+            }
             req.setAttribute("orders", orders);
             req.getRequestDispatcher("/order/list.jsp").forward(req, resp);
         } else if (action.equals("edit")) {

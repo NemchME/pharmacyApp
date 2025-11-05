@@ -2,6 +2,7 @@ package org.example.service;
 
 import org.example.exception.EntityNotFoundException;
 import org.example.model.AvailabilityOfMedicine;
+import org.example.model.Medicine;
 import org.example.repository.AvailabilityOfMedicineRepository;
 
 import java.util.List;
@@ -42,6 +43,15 @@ public class AvailabilityOfMedicineService {
                 checkForeignKeys(availabilityOfMedicine.getPharmacyId(), availabilityOfMedicine.getMedicineId())) {
             availabilityOfMedicineRepository.update(availabilityOfMedicine);
         }
+    }
+
+    public List<AvailabilityOfMedicine> filter(String search) {
+        return availabilityOfMedicineRepository.filter(search);
+    }
+
+    public List<AvailabilityOfMedicine> sort(String sort, String comparator) {
+
+        return availabilityOfMedicineRepository.sort(sort, comparator);
     }
 
     public void delete(Integer id) {

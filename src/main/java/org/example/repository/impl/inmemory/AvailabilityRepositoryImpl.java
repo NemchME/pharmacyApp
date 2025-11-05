@@ -30,6 +30,16 @@ public class AvailabilityRepositoryImpl implements AvailabilityOfMedicineReposit
     }
 
     @Override
+    public List<AvailabilityOfMedicine> filter(String search) {
+        return List.of();
+    }
+
+    @Override
+    public List<AvailabilityOfMedicine> sort(String sort, String comparator) {
+        return List.of();
+    }
+
+    @Override
     public void update(AvailabilityOfMedicine entity) {
         storageMap.put(entity.getId(), entity);
     }

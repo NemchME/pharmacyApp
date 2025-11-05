@@ -2,6 +2,7 @@ package org.example.repository.impl.jdbc;
 
 import org.example.exception.DBException;
 import org.example.model.AvailabilityOfMedicine;
+import org.example.model.AvailabilityOfMedicine;
 import org.example.repository.AvailabilityOfMedicineRepository;
 import org.example.sql.config.DBConnection;
 
@@ -63,6 +64,60 @@ public class AvailabilityOfMedicineRepositoryImpl implements AvailabilityOfMedic
             throw new DBException(e.getMessage(), e);
         }
         return availabilityOfMedicineList;
+    }
+
+    @Override
+    public List<AvailabilityOfMedicine> filter(String search) {
+        List<AvailabilityOfMedicine> pharmacies = new ArrayList<>();
+        String sql = "SELECT * FROM availability_of_medicine " +
+                "WHERE LOWER(CAST(id AS VARCHAR)) LIKE LOWER(?) OR LOWER(CAST(pharmacy_id AS VARCHAR)) LIKE LOWER(?) " +
+                "OR LOWER(CAST(medicine_id AS VARCHAR)) LIKE LOWER(?) OR LOWER(CAST(price AS VARCHAR)) LIKE LOWER(?) " +
+                "OR LOWER(CAST(quantity AS VARCHAR)) LIKE LOWER(?)";
+
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            String pattern = "%" + search + "%";
+
+            for (int i = 1; i <= 5; i++) {
+                ps.setString(i, pattern);
+            }
+
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    pharmacies.add(mapRow(rs));
+                }
+            }
+        } catch (SQLException e) {
+            throw new DBException("Ошибка при поиске доступности препаратов: " + e.getMessage(), e);
+        }
+        return pharmacies;
+    }
+
+    @Override
+    public List<AvailabilityOfMedicine> sort(String sort, String comparator) {
+        List<AvailabilityOfMedicine> pharmacies = new ArrayList<>();
+
+        String orderBy = switch (sort) {
+            case "pharmacyId" -> "pharmacy_id";
+            case "medicineId" -> "medicine_id";
+            case "price" -> "price";
+            case "quantity" -> "quantity";
+            default -> "id";
+        };
+
+        String direction = "desc".equalsIgnoreCase(comparator) ? "DESC" : "ASC";
+
+        String sql = "SELECT * FROM availability_of_medicine " +
+                "ORDER BY " + orderBy + " " + direction;
+
+        try (PreparedStatement ps = connection.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) {
+                pharmacies.add(mapRow(rs));
+            }
+        } catch (SQLException e) {
+            throw new DBException("Ошибка при сортировке доступности препаратов: " + e.getMessage(), e);
+        }
+        return pharmacies;
     }
 
 

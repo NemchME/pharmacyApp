@@ -67,6 +67,61 @@ public class MedicineRepositoryImpl implements MedicineRepository {
         return medicineList;
     }
 
+    @Override
+    public List<Medicine> filter(String search) {
+        List<Medicine> medicines = new ArrayList<>();
+        String sql = "SELECT * FROM medicine " +
+                "WHERE LOWER(trade_name) LIKE LOWER(?) OR LOWER(inn) LIKE LOWER(?) " +
+                "OR LOWER(dosage) LIKE LOWER(?) OR LOWER(form) LIKE LOWER(?) " +
+                "OR LOWER(CAST(producer_id AS VARCHAR)) LIKE LOWER(?)";
+
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            String pattern = "%" + search + "%";
+
+            for (int i = 1; i <= 5; i++) {
+                ps.setString(i, pattern);
+            }
+
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    medicines.add(mapRow(rs));
+                }
+            }
+        } catch (SQLException e) {
+            throw new DBException("Ошибка при поиске препаратов: " + e.getMessage(), e);
+        }
+        return medicines;
+    }
+
+    @Override
+    public List<Medicine> sort(String sort, String comparator) {
+        List<Medicine> medicines = new ArrayList<>();
+
+        String orderBy = switch (sort) {
+            case "tradeName" -> "trade_name";
+            case "inn" -> "inn";
+            case "dosage" -> "dosage";
+            case "form" -> "form";
+            case "producerId" -> "producer_id";
+            default -> "id";
+        };
+
+        String direction = "desc".equalsIgnoreCase(comparator) ? "DESC" : "ASC";
+
+        String sql = "SELECT * FROM medicine " +
+                "ORDER BY " + orderBy + " " + direction;
+
+        try (PreparedStatement ps = connection.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) {
+                medicines.add(mapRow(rs));
+            }
+        } catch (SQLException e) {
+            throw new DBException("Ошибка при сортировке препаратов: " + e.getMessage(), e);
+        }
+        return medicines;
+    }
+
 
     @Override
     public void update(Medicine entity) {

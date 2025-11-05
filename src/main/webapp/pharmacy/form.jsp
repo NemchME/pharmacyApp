@@ -3,33 +3,59 @@
 <head>
     <title>Форма аптеки</title>
 </head>
+<body bgcolor="#e6f2ff">
 <body>
-<p><a href="availabilityOfMedicines">AvailabilityOfMedicines </a></p>
-<p><a href="medicines">Medicine </a></p>
-<p><a href="orders">Order </a></p>
-<p><a href="pharmacies">Pharmacy </a></p>
-<p><a href="producers">Producer </a></p>
-<p><a href="users">User<br></a></p>
-<h2>${pharmacy.id == null ? "Добавить аптеку" : "Редактировать аптеку"}</h2>
+<div align="center" style="margin-bottom: 20px;">
+    <table border="0" cellpadding="8" bgcolor="#cce5ff">
+        <tr>
+            <td><a href="availabilityOfMedicines"><b>AvailabilityOfMedicines</b></a></td>
+            <td><a href="medicines"><b>Medicine</b></a></td>
+            <td><a href="orders"><b>Order</b></a></td>
+            <td><a href="pharmacies"><b>Pharmacy</b></a></td>
+            <td><a href="producers"><b>Producer</b></a></td>
+            <td><a href="users"><b>User</b></a></td>
+        </tr>
+    </table>
+</div>
 
-<form action="${pageContext.request.contextPath}/pharmacies" method="post">
+
+<div align="center">
+<h2>${pharmacy.id == null ? "Добавить аптеку" : "Редактировать аптеку"}</h2>
+<form action="pharmacies" method="post">
     <input type="hidden" name="id" value="${pharmacy.id}">
 
-    Название:<input type="text" name="name" value="${pharmacy.name}" required><br>
-
-    Адрес:<input type="text" name="address" value="${pharmacy.address}" required><br>
-
-    Телефон:<input type="text" name="phone" value="${pharmacy.phone}" required><br>
-
-    Часы работы:<input type="text" name="workingHours" value="${pharmacy.workingHours}" required><br>
-
-    Путь от центра:<input type="text" name="wayFromCenter" value="${pharmacy.wayFromCenter}" required><br>
-
-    <button type="submit">Сохранить</button>
+    <table border="0" cellpadding="6">
+        <tr>
+            <td align="right"><b>Название:</b></td>
+            <td><input type="text" name="name" value="${pharmacy.name}" size="40" required></td>
+        </tr>
+        <tr>
+            <td align="right"><b>Адрес:</b></td>
+            <td><input type="text" name="address" value="${pharmacy.address}" size="40" required></td>
+        </tr>
+        <tr>
+            <td align="right"><b>Телефон:</b></td>
+            <td><input type="text" name="phone" value="${pharmacy.phone}" size="40" required></td>
+        </tr>
+        <tr>
+            <td align="right"><b>Часы работы:</b></td>
+            <td><input type="text" name="workingHours" value="${pharmacy.workingHours}" size="40" required></td>
+        </tr>
+        <tr>
+            <td align="right"><b>Путь от центра:</b></td>
+            <td><input type="text" name="wayFromCenter" value="${pharmacy.wayFromCenter}" size="40" required></td>
+        </tr>
+        <tr>
+            <td colspan="2" align="center">
+                <input type="submit" value="Сохранить">
+            </td>
+        </tr>
+        </table>
 </form>
 
 <br>
-<a href="${pageContext.request.contextPath}/pharmacies?action=list">На главную</a>
+<a href="pharmacies">Вернуться к списку аптек</a>
+</div>
 
 </body>
 </html>

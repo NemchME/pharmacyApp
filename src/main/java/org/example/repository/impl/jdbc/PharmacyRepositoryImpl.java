@@ -67,6 +67,61 @@ public class PharmacyRepositoryImpl implements PharmacyRepository {
         return pharmacyList;
     }
 
+    @Override
+    public List<Pharmacy> filter(String search) {
+        List<Pharmacy> pharmacies = new ArrayList<>();
+        String sql = "SELECT * FROM pharmacy " +
+                "WHERE LOWER(CAST(id AS VARCHAR)) LIKE LOWER(?) OR LOWER(name) LIKE LOWER(?) " +
+                "OR LOWER(address) LIKE LOWER(?) OR LOWER(phone) LIKE LOWER(?) " +
+                "OR LOWER(working_hours) LIKE LOWER(?) OR LOWER(way_from_center) LIKE LOWER(?)";
+
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            String pattern = "%" + search + "%";
+
+            for (int i = 1; i <= 6; i++) {
+                ps.setString(i, pattern);
+            }
+
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    pharmacies.add(mapRow(rs));
+                }
+            }
+        } catch (SQLException e) {
+            throw new DBException("Ошибка при поиске аптек: " + e.getMessage(), e);
+        }
+        return pharmacies;
+    }
+
+    @Override
+    public List<Pharmacy> sort(String sort, String comparator) {
+        List<Pharmacy> pharmacies = new ArrayList<>();
+
+        String orderBy = switch (sort) {
+            case "name" -> "name";
+            case "address" -> "address";
+            case "phone" -> "phone";
+            case "workingHours" -> "working_hours";
+            case "wayFromCenter" -> "way_from_center";
+            default -> "id";
+        };
+
+        String direction = "desc".equalsIgnoreCase(comparator) ? "DESC" : "ASC";
+
+        String sql = "SELECT * FROM pharmacy " +
+                "ORDER BY " + orderBy + " " + direction;
+
+        try (PreparedStatement ps = connection.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) {
+                pharmacies.add(mapRow(rs));
+            }
+        } catch (SQLException e) {
+            throw new DBException("Ошибка при сортировке аптек: " + e.getMessage(), e);
+        }
+        return pharmacies;
+    }
+
 
     @Override
     public void update(Pharmacy entity) {

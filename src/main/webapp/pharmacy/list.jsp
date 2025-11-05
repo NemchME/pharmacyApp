@@ -2,38 +2,93 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 
 <html>
-<head><title>Список аптек</title></head>
-<body>
-<p><a href="availabilityOfMedicines">AvailabilityOfMedicines </a></p>
-<p><a href="medicines">Medicine </a></p>
-<p><a href="orders">Order </a></p>
-<p><a href="pharmacies">Pharmacy </a></p>
-<p><a href="producers">Producer </a></p>
-<p><a href="users">User<br></a></p>
+<head>
+    <title>Список аптек</title>
+</head>
+<body bgcolor="#e6f2ff">
+
+<div align="center" style="margin-bottom: 20px;">
+    <table border="0" cellpadding="8" bgcolor="#cce5ff">
+        <tr>
+            <td><a href="availabilityOfMedicines"><b>AvailabilityOfMedicines</b></a></td>
+            <td><a href="medicines"><b>Medicine</b></a></td>
+            <td><a href="orders"><b>Order</b></a></td>
+            <td><a href="pharmacies"><b>Pharmacy</b></a></td>
+            <td><a href="producers"><b>Producer</b></a></td>
+            <td><a href="users"><b>User</b></a></td>
+        </tr>
+    </table>
+</div>
+
+<div align="right">
+    <h2>Поиск по слову</h2>
+    <form action="pharmacies" method="get">
+        <input type="hidden" name="action" value="list"/>
+        <input type="text" name="search" placeholder="Введите слово для поиска" value="${param.search}"/>
+
+        <input type="submit" value="Применить"/>
+    </form>
+
+    <h2>Сортировка</h2>
+    <form action="pharmacies" method="get">
+        <select name="sort">
+                    <option value="">По ID</option>
+                    <option value="name" ${param.sort == 'name' ? 'selected' : ''}>По названию</option>
+                    <option value="address" ${param.sort == 'address' ? 'selected' : ''}>По адресу</option>
+                    <option value="phone" ${param.sort == 'phone' ? 'selected' : ''}>По телефону</option>
+                    <option value="workingHours" ${param.sort == 'workingHours' ? 'selected' : ''}>По режиму работы</option>
+                    <option value="wayFromCenter" ${param.sort == 'wayFromCenter' ? 'selected' : ''}>По пути от центра</option>
+        </select>
+        <select name="comparator">
+            <option value="asc" ${param.comparator == 'asc' ? 'selected' : ''}>По возрастанию</option>
+            <option value="desc" ${param.comparator == 'desc' ? 'selected' : ''}>По убыванию</option>
+        </select>
+        <input type="submit" value="Применить"/>
+    </form
+</div>
+    <br/>
+<div align="center">
+
 <h1>Список аптек</h1>
+    <a href="pharmacies?action=new">
+        <button type="button" style="background-color: lightgreen; padding: 5px 10px;"><b>Добавить аптеку</b></button>
+    </a>
+</div>
 
-<a href="pharmacies?action=new">Добавить аптеку</a>
-<br><br>
+<br/>
 
-<table border="1" cellpadding="6">
-    <tr>
-        <th>ID</th><th>Название</th><th>Адрес</th><th>Телефон</th><th>Режим работы</th><th>Действия</th>
+<table border="1" cellpadding="6" bgcolor="white" align="center">
+    <tr bgcolor="#b3daff">
+        <th>ID</th>
+        <th>Название</th>
+        <th>Адрес</th>
+        <th>Телефон</th>
+        <th>Режим работы</th>
+        <th>Путь от центра</th>
+        <th></th>
     </tr>
 
     <c:forEach var="pharmacy" items="${pharmacies}">
-        <tr>
-            <td>${pharmacy.id}</td>
-            <td>${pharmacy.name}</td>
-            <td>${pharmacy.address}</td>
-            <td>${pharmacy.phone}</td>
-            <td>${pharmacy.workingHours}</td>
-            <td>${pharmacy.wayFromCenter}</td>
-            <td>
-                <a href="pharmacies?action=edit&id=${pharmacy.id}">Редактировать</a> |
-                <a href="pharmacies?action=delete&id=${pharmacy.id}">Удалить</a>
+        <tr bgcolor="#f0f8ff">
+            <td><c:out value="${pharmacy.id}"/></td>
+            <td><c:out value="${pharmacy.name}"/></td>
+            <td><c:out value="${pharmacy.address}"/></td>
+            <td><c:out value="${pharmacy.phone}"/></td>
+            <td><c:out value="${pharmacy.workingHours}"/></td>
+            <td><c:out value="${pharmacy.wayFromCenter}"/></td>
+            <td align="center">
+                <a href="pharmacies?action=edit&id=${pharmacy.id}">
+                    <button type="button" style="background-color: lightblue;">Редактировать</button>
+                </a>
+
+                <a href="pharmacies?action=delete&id=${pharmacy.id}" onclick="return confirm('Удалить аптеку id=${pharmacy.id}?');">
+                    <button type="button" style="background-color: lightcoral;">Удалить</button>
+                </a>
             </td>
         </tr>
     </c:forEach>
 </table>
+
+<br/>
 </body>
 </html>

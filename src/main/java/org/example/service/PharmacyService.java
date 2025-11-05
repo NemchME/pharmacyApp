@@ -28,6 +28,15 @@ public class PharmacyService {
         return pharmacyRepository.findAll();
     }
 
+    public List<Pharmacy> filter(String search) {
+        return pharmacyRepository.filter(search);
+    }
+
+    public List<Pharmacy> sort(String sort, String comparator) {
+
+        return pharmacyRepository.sort(sort, comparator);
+    }
+
     public void update(Pharmacy pharmacy) {
         if (findById(pharmacy.getId()) != null) {
             pharmacyRepository.update(pharmacy);
