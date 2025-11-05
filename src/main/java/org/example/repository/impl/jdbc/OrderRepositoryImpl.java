@@ -20,7 +20,7 @@ public class OrderRepositoryImpl implements OrderRepository {
 
     @Override
     public void save(Order entity) {
-        String sql = "INSERT INTO orders (user_id, medicine_id, pharmacy_id, quantity, status) " +
+        String sql = "INSERT INTO orders (user_id, medicine_id, pharmacy_id, quantity, status, created_at) " +
                 "VALUES (?, ?, ?, ?, ?)";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setInt(1, entity.getUserId());
@@ -28,6 +28,7 @@ public class OrderRepositoryImpl implements OrderRepository {
             ps.setInt(3, entity.getPharmacyId());
             ps.setInt(4, entity.getQuantity());
             ps.setString(5, entity.getStatus());
+            ps.setTimestamp(5, entity.getCreatedAt());
             ps.executeUpdate();
 
         } catch (SQLException e) {

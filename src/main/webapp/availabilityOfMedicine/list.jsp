@@ -54,22 +54,26 @@
 
 <br/>
 
-<table border="1" cellpadding="6">
-    <tr>
-        <th>ID</th><th>ID аптеки</th><th>ID препарата</th><th>Цена</th><th>Количество</th><th>Время обновления</th>
+<table border="1" cellpadding="6" bgcolor="white" align="center">
+    <tr bgcolor="#b3daff">
+        <th>ID</th><th>ID аптеки</th><th>ID препарата</th><th>Цена</th><th>Количество</th><th>Время обновления</th><th></th>
     </tr>
 
     <c:forEach var="availabilityOfMedicine" items="${availabilityOfMedicines}">
-        <tr>
-            <td>${availabilityOfMedicine.id}</td>
-            <td>${availabilityOfMedicine.pharmacyId}</td>
-            <td>${availabilityOfMedicine.medicineId}</td>
-            <td>${availabilityOfMedicine.price}</td>
-            <td>${availabilityOfMedicine.quantity}</td>
-            <td>${availabilityOfMedicine.updatedAt}</td>
+        <tr bgcolor="#f0f8ff">
+            <td><c:out value="${availabilityOfMedicine.id}"/></td>
+            <td><c:out value="${availabilityOfMedicine.pharmacyId}"/></td>
+            <td><c:out value="${availabilityOfMedicine.medicineId}"/></td>
+            <td><c:out value="${availabilityOfMedicine.price}"/></td>
+            <td><c:out value="${availabilityOfMedicine.quantity}"/></td>
+            <td><c:out value="${availabilityOfMedicine.updatedAt}"/></td>
             <td>
-                <a href="availabilityOfMedicines?action=edit&id=${availabilityOfMedicine.id}">Редактировать</a> |
-                <a href="availabilityOfMedicines?action=delete&id=${availabilityOfMedicine.id}">Удалить</a>
+                <a href="availabilityOfMedicines?action=edit&id=${availabilityOfMedicine.id}">
+                                    <button type="button" style="background-color: lightblue;">Редактировать</button>
+                </a>
+                <a href="availabilityOfMedicines?action=delete&id=${availabilityOfMedicine.id}" onclick="return confirm('Удалить доступность препарата id=${availabilityOfMedicine.id}?');">
+                    <button type="button" style="background-color: lightcoral;">Удалить</button>
+                </a>
             </td>
         </tr>
     </c:forEach>

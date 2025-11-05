@@ -3,7 +3,7 @@
 
 <html>
 <head><title>Список производителей</title></head>
-<body>
+<body bgcolor="#e6f2ff">
 <div align="center" style="margin-bottom: 20px;">
     <table border="0" cellpadding="8" bgcolor="#cce5ff">
         <tr>
@@ -50,20 +50,25 @@
 
 <br/>
 
-<table border="1" cellpadding="6">
-    <tr>
-        <th>ID</th><th>Название</th><th>Страна</th>
+<table border="1" cellpadding="6" bgcolor="white" align="center">
+    <tr bgcolor="#b3daff">
+        <th>ID</th><th>Название</th><th>Страна</th><th></th>
     </tr>
 
     <c:forEach var="producer" items="${producers}">
-        <tr>
-            <td>${producer.id}</td>
-            <td>${producer.name}</td>
-            <td>${producer.country}</td>
+        <tr bgcolor="#f0f8ff">
+            <td><c:out value="${producer.id}"/></td>
+            <td><c:out value="${producer.name}"/></td>
+            <td><c:out value="${producer.country}"/></td>
 
-            <td>
-                <a href="producers?action=edit&id=${producer.id}">Редактировать</a> |
-                <a href="producers?action=delete&id=${producer.id}">Удалить</a>
+            <td align="center">
+                <a href="producers?action=edit&id=${producer.id}">
+                    <button type="button" style="background-color: lightblue;">Редактировать</button>
+                </a>
+
+                <a href="producers?action=delete&id=${producer.id}" onclick="return confirm('Удалить производителя id=${producer.id}?');">
+                    <button type="button" style="background-color: lightcoral;">Удалить</button>
+                </a>
             </td>
         </tr>
     </c:forEach>

@@ -4,7 +4,6 @@
 <html>
 <head><title>Список пользователей</title></head>
 <body bgcolor="#e6f2ff">
-<body>
 <div align="center" style="margin-bottom: 20px;">
     <table border="0" cellpadding="8" bgcolor="#cce5ff">
         <tr>
@@ -54,20 +53,25 @@
 
 <br/>
 
-<table border="1" cellpadding="6">
-    <tr>
-        <th>ID</th><th>Никнейм</th><th>Эл. почта</th><th>Роль</th>
+<table border="1" cellpadding="6" bgcolor="white" align="center">
+    <tr bgcolor="#b3daff">
+        <th>ID</th><th>Никнейм</th><th>Эл. почта</th><th>Роль</th><th></th>
     </tr>
 
     <c:forEach var="user" items="${users}">
-        <tr>
-            <td>${user.id}</td>
-            <td>${user.username}</td>
-            <td>${user.email}</td>
-            <td>${user.role}</td>
-            <td>
-                <a href="users?action=edit&id=${user.id}">Редактировать</a> |
-                <a href="users?action=delete&id=${user.id}">Удалить</a>
+        <tr bgcolor="#f0f8ff">
+            <td><c:out value="${user.id}"/></td>
+            <td><c:out value="${user.username}"/></td>
+            <td><c:out value="${user.email}"/></td>
+            <td><c:out value="${user.role}"/></td>
+            
+            <td align="center">
+                <a href="users?action=edit&id=${user.id}">
+                    <button type="button" style="background-color: lightblue;">Редактировать</button>
+                </a>
+                <a href="users?action=delete&id=${user.id}" onclick="return confirm('Удалить пользователя id=${user.id}?');">
+                    <button type="button" style="background-color: lightcoral;">Удалить</button>
+                </a>
             </td>
         </tr>
     </c:forEach>
