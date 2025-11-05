@@ -3,6 +3,7 @@ package org.example.repository.impl.jdbc;
 import org.example.exception.DBException;
 import org.example.model.AvailabilityOfMedicine;
 import org.example.model.AvailabilityOfMedicine;
+import org.example.model.Pharmacy;
 import org.example.repository.AvailabilityOfMedicineRepository;
 import org.example.sql.config.DBConnection;
 
@@ -64,6 +65,39 @@ public class AvailabilityOfMedicineRepositoryImpl implements AvailabilityOfMedic
             throw new DBException(e.getMessage(), e);
         }
         return availabilityOfMedicineList;
+    }
+
+    public List<AvailabilityOfMedicine> findAll(int page, int size) {
+        List<AvailabilityOfMedicine> availabilityOfMedicineList = new ArrayList<>();
+        String sql = "SELECT * FROM availability_of_medicine LIMIT ? OFFSET ?";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, size);
+            ps.setInt(2, (page - 1) * size);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    availabilityOfMedicineList.add(mapRow(rs));
+                }
+            }
+
+            return availabilityOfMedicineList;
+        } catch (SQLException e) {
+            throw new DBException(e.getMessage(), e);
+        }
+    }
+
+    @Override
+    public int countAll() {
+        String sql = "SELECT COUNT(*) FROM availability_of_medicine";
+        try (Statement st = connection.createStatement()) {
+            ResultSet rs = st.executeQuery(sql);
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+        } catch (SQLException e) {
+            throw new DBException("Ошибка при подсчёте записей: " + e.getMessage(), e);
+        }
+        return 0;
     }
 
     @Override

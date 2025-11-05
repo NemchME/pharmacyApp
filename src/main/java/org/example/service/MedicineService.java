@@ -33,6 +33,15 @@ public class MedicineService {
         return medicineRepository.findAll();
     }
 
+    public List<Medicine> findAll(int page, int size) {
+        return medicineRepository.findAll(page, size);
+    }
+
+    public int getTotalPages(int size) {
+        int total = medicineRepository.countAll();
+        return (int) Math.ceil((double) total / size);
+    }
+
     public List<Medicine> filter(String search) {
         return medicineRepository.filter(search);
     }

@@ -49,7 +49,7 @@
 </form>
 
 <br>
-<a href="availabilityOfMedicines">Вернуться к списку доступности препаратов</a>
+<a href="availabilityOfMedicines?page=1&size=5">Вернуться к списку доступности препаратов</a>
 </div>
 </body>
 </html>

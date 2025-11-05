@@ -35,6 +35,16 @@ public class PharmacyRepositoryImpl implements PharmacyRepository {
     }
 
     @Override
+    public List<Pharmacy> findAll(int page, int size) {
+        return List.of();
+    }
+
+    @Override
+    public int countAll() {
+        return storageMap.size();
+    }
+
+    @Override
     public List<Pharmacy> sort(String sort, String comparator) {
         return List.of();
     }

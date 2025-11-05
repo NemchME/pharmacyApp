@@ -2,7 +2,6 @@ package org.example.service;
 
 import org.example.exception.EntityNotFoundException;
 import org.example.model.AvailabilityOfMedicine;
-import org.example.model.Medicine;
 import org.example.repository.AvailabilityOfMedicineRepository;
 
 import java.util.List;
@@ -36,6 +35,15 @@ public class AvailabilityOfMedicineService {
 
     public List<AvailabilityOfMedicine> findAll() {
         return availabilityOfMedicineRepository.findAll();
+    }
+
+    public List<AvailabilityOfMedicine> findAll(int page, int size) {
+        return availabilityOfMedicineRepository.findAll(page, size);
+    }
+
+    public int getTotalPages(int size) {
+        int total = availabilityOfMedicineRepository.countAll();
+        return (int) Math.ceil((double) total / size);
     }
 
     public void update(AvailabilityOfMedicine availabilityOfMedicine) {

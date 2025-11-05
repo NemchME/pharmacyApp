@@ -45,7 +45,17 @@ public class MedicineServlet extends HttpServlet {
             String sort = req.getParameter("sort");
             String comparator = req.getParameter("comparator");
             List<Medicine> medicines;
-            if (search != null) {
+            if (req.getParameter("page") != null && req.getParameter("size") != null) {
+                int page = Integer.parseInt(req.getParameter("page"));
+                int size = Integer.parseInt(req.getParameter("size"));
+                medicines = medicineService.findAll(page, size);
+                int totalPages = medicineService.getTotalPages(size);
+
+                req.setAttribute("currentPage", page);
+                req.setAttribute("currentSize", size);
+                req.setAttribute("totalPages", totalPages);
+
+            } else if (search != null) {
                 medicines = medicineService.filter(search);
             } else if (sort != null && comparator != null) {
                 medicines = medicineService.sort(sort, comparator);

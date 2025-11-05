@@ -45,7 +45,17 @@ public class UserServlet extends HttpServlet {
             String sort = req.getParameter("sort");
             String comparator = req.getParameter("comparator");
             List<User> users;
-            if (search != null) {
+            if (req.getParameter("page") != null && req.getParameter("size") != null) {
+                int page = Integer.parseInt(req.getParameter("page"));
+                int size = Integer.parseInt(req.getParameter("size"));
+                users = userService.findAll(page, size);
+                int totalPages = userService.getTotalPages(size);
+
+                req.setAttribute("currentPage", page);
+                req.setAttribute("currentSize", size);
+                req.setAttribute("totalPages", totalPages);
+
+            } else if (search != null) {
                 users = userService.filter(search);
             } else if (sort != null && comparator != null) {
                 users = userService.sort(sort, comparator);

@@ -45,7 +45,17 @@ public class OrderServlet extends HttpServlet {
             String sort = req.getParameter("sort");
             String comparator = req.getParameter("comparator");
             List<Order> orders;
-            if (search != null) {
+            if (req.getParameter("page") != null && req.getParameter("size") != null) {
+                int page = Integer.parseInt(req.getParameter("page"));
+                int size = Integer.parseInt(req.getParameter("size"));
+                orders = orderService.findAll(page, size);
+                int totalPages = orderService.getTotalPages(size);
+
+                req.setAttribute("currentPage", page);
+                req.setAttribute("currentSize", size);
+                req.setAttribute("totalPages", totalPages);
+
+            } else if (search != null) {
                 orders = orderService.filter(search);
             } else if (sort != null && comparator != null) {
                 orders = orderService.sort(sort, comparator);

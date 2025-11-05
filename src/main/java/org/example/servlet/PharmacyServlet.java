@@ -41,17 +41,30 @@ public class PharmacyServlet extends HttpServlet {
         String action = req.getParameter("action");
 
         if (action == null || action.equals("list")) {
+
             String search = req.getParameter("search");
             String sort = req.getParameter("sort");
             String comparator = req.getParameter("comparator");
             List<Pharmacy> pharmacies;
+            int page = 1;
+            int size = 10;
+            if (req.getParameter("page") != null && req.getParameter("size") != null) {
+                page = Integer.parseInt(req.getParameter("page"));
+                size = Integer.parseInt(req.getParameter("size"));
+            }
+
+            int totalPages = pharmacyService.getTotalPages(size);
+
             if (search != null) {
                 pharmacies = pharmacyService.filter(search);
             } else if (sort != null && comparator != null) {
                 pharmacies = pharmacyService.sort(sort, comparator);
             } else {
-                pharmacies = pharmacyService.findAll();
+                pharmacies = pharmacyService.findAll(page, size);
             }
+            req.setAttribute("currentPage", page);
+            req.setAttribute("currentSize", size);
+            req.setAttribute("totalPages", totalPages);
             req.setAttribute("pharmacies", pharmacies);
             req.getRequestDispatcher("/pharmacy/list.jsp").forward(req, resp);
         } else if (action.equals("edit")) {

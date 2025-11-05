@@ -18,6 +18,39 @@ public class ProducerRepositoryImpl implements ProducerRepository {
         this.connection = dbConnection.getConnection();
     }
 
+    public List<Producer> findAll(int page, int size) {
+        List<Producer> producerList = new ArrayList<>();
+        String sql = "SELECT * FROM producer LIMIT ? OFFSET ?";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, size);
+            ps.setInt(2, (page - 1) * size);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    producerList.add(mapRow(rs));
+                }
+            }
+
+            return producerList;
+        } catch (SQLException e) {
+            throw new DBException(e.getMessage(), e);
+        }
+    }
+
+    @Override
+    public int countAll() {
+        String sql = "SELECT COUNT(*) FROM producer";
+        try (Statement st = connection.createStatement()) {
+            ResultSet rs = st.executeQuery(sql);
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+        } catch (SQLException e) {
+            throw new DBException("Ошибка при подсчёте записей: " + e.getMessage(), e);
+        }
+        return 0;
+    }
+
     @Override
     public void save(Producer entity) {
         String sql = "INSERT INTO producer (name, country) " +

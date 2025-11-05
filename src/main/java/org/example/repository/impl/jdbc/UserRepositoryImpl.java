@@ -66,6 +66,39 @@ public class UserRepositoryImpl implements UserRepository {
         return userList;
     }
 
+    public List<User> findAll(int page, int size) {
+        List<User> userList = new ArrayList<>();
+        String sql = "SELECT * FROM users LIMIT ? OFFSET ?";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, size);
+            ps.setInt(2, (page - 1) * size);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    userList.add(mapRow(rs));
+                }
+            }
+
+            return userList;
+        } catch (SQLException e) {
+            throw new DBException(e.getMessage(), e);
+        }
+    }
+
+    @Override
+    public int countAll() {
+        String sql = "SELECT COUNT(*) FROM users";
+        try (Statement st = connection.createStatement()) {
+            ResultSet rs = st.executeQuery(sql);
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+        } catch (SQLException e) {
+            throw new DBException("Ошибка при подсчёте записей: " + e.getMessage(), e);
+        }
+        return 0;
+    }
+
     @Override
     public List<User> filter(String search) {
         List<User> users = new ArrayList<>();

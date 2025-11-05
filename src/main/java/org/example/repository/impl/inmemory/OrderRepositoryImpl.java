@@ -35,6 +35,16 @@ public class OrderRepositoryImpl implements OrderRepository {
     }
 
     @Override
+    public List<Order> findAll(int page, int size) {
+        return List.of();
+    }
+
+    @Override
+    public int countAll() {
+        return storageMap.size();
+    }
+
+    @Override
     public List<Order> sort(String sort, String comparator) {
         return List.of();
     }

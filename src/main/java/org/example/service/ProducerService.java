@@ -1,7 +1,6 @@
 package org.example.service;
 
 import org.example.exception.EntityNotFoundException;
-import org.example.model.Pharmacy;
 import org.example.model.Producer;
 import org.example.repository.ProducerRepository;
 
@@ -27,6 +26,15 @@ public class ProducerService {
 
     public List<Producer> findAll() {
         return producerRepository.findAll();
+    }
+
+    public List<Producer> findAll(int page, int size) {
+        return producerRepository.findAll(page, size);
+    }
+
+    public int getTotalPages(int size) {
+        int total = producerRepository.countAll();
+        return (int) Math.ceil((double) total / size);
     }
 
     public void update(Producer producer) {

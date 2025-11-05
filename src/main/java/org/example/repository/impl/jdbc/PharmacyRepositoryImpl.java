@@ -55,8 +55,7 @@ public class PharmacyRepositoryImpl implements PharmacyRepository {
     public List<Pharmacy> findAll() {
         List<Pharmacy> pharmacyList = new ArrayList<>();
         String sql = "SELECT * FROM pharmacy";
-        try (Statement st = connection.createStatement();
-             ResultSet rs = st.executeQuery(sql)) {
+        try (Statement st = connection.createStatement(); ResultSet rs = st.executeQuery(sql)) {
             while (rs.next()) {
                 pharmacyList.add(mapRow(rs));
             }
@@ -66,6 +65,39 @@ public class PharmacyRepositoryImpl implements PharmacyRepository {
         }
         return pharmacyList;
     }
+
+    public List<Pharmacy> findAll(int page, int size) {
+        List<Pharmacy> pharmacyList = new ArrayList<>();
+        String sql = "SELECT * FROM pharmacy LIMIT ? OFFSET ?";
+
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, size);
+            ps.setInt(2, (page - 1) * size);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    pharmacyList.add(mapRow(rs));
+                }
+            }
+            return pharmacyList;
+        } catch (SQLException e) {
+            throw new DBException(e.getMessage(), e);
+        }
+    }
+
+    public int countAll() {
+        String sql = "SELECT COUNT(*) FROM pharmacy";
+        try (Statement st = connection.createStatement(); ResultSet rs = st.executeQuery(sql)) {
+
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+        } catch (SQLException e) {
+            throw new DBException("Ошибка при подсчёте записей: " + e.getMessage(), e);
+        }
+        return 0;
+    }
+
 
     @Override
     public List<Pharmacy> filter(String search) {

@@ -18,6 +18,39 @@ public class OrderRepositoryImpl implements OrderRepository {
         this.connection = dbConnection.getConnection();
     }
 
+    public List<Order> findAll(int page, int size) {
+        List<Order> orderList = new ArrayList<>();
+        String sql = "SELECT * FROM orders LIMIT ? OFFSET ?";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, size);
+            ps.setInt(2, (page - 1) * size);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    orderList.add(mapRow(rs));
+                }
+            }
+
+            return orderList;
+        } catch (SQLException e) {
+            throw new DBException(e.getMessage(), e);
+        }
+    }
+
+    @Override
+    public int countAll() {
+        String sql = "SELECT COUNT(*) FROM orders";
+        try (Statement st = connection.createStatement()) {
+            ResultSet rs = st.executeQuery(sql);
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+        } catch (SQLException e) {
+            throw new DBException("Ошибка при подсчёте записей: " + e.getMessage(), e);
+        }
+        return 0;
+    }
+
     @Override
     public void save(Order entity) {
         String sql = "INSERT INTO orders (user_id, medicine_id, pharmacy_id, quantity, status, created_at) " +
@@ -28,7 +61,7 @@ public class OrderRepositoryImpl implements OrderRepository {
             ps.setInt(3, entity.getPharmacyId());
             ps.setInt(4, entity.getQuantity());
             ps.setString(5, entity.getStatus());
-            ps.setTimestamp(5, entity.getCreatedAt());
+            ps.setTimestamp(6, entity.getCreatedAt());
             ps.executeUpdate();
 
         } catch (SQLException e) {

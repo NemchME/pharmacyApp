@@ -39,6 +39,15 @@ public class OrderService {
         return orderRepository.findAll();
     }
 
+    public List<Order> findAll(int page, int size) {
+        return orderRepository.findAll(page, size);
+    }
+
+    public int getTotalPages(int size) {
+        int total = orderRepository.countAll();
+        return (int) Math.ceil((double) total / size);
+    }
+
     public List<Order> filter(String search) {
         return orderRepository.filter(search);
     }

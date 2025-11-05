@@ -28,6 +28,15 @@ public class PharmacyService {
         return pharmacyRepository.findAll();
     }
 
+    public List<Pharmacy> findAll(int page, int size) {
+        return pharmacyRepository.findAll(page, size);
+    }
+
+    public int getTotalPages(int size) {
+        int total = pharmacyRepository.countAll();
+        return (int) Math.ceil((double) total / size);
+    }
+
     public List<Pharmacy> filter(String search) {
         return pharmacyRepository.filter(search);
     }

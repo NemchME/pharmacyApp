@@ -67,6 +67,39 @@ public class MedicineRepositoryImpl implements MedicineRepository {
         return medicineList;
     }
 
+    public List<Medicine> findAll(int page, int size) {
+        List<Medicine> medicineList = new ArrayList<>();
+        String sql = "SELECT * FROM medicine LIMIT ? OFFSET ?";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, size);
+            ps.setInt(2, (page - 1) * size);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    medicineList.add(mapRow(rs));
+                }
+            }
+
+            return medicineList;
+        } catch (SQLException e) {
+            throw new DBException(e.getMessage(), e);
+        }
+    }
+
+    @Override
+    public int countAll() {
+        String sql = "SELECT COUNT(*) FROM medicine";
+        try (Statement st = connection.createStatement()) {
+            ResultSet rs = st.executeQuery(sql);
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+        } catch (SQLException e) {
+            throw new DBException("Ошибка при подсчёте записей: " + e.getMessage(), e);
+        }
+        return 0;
+    }
+
     @Override
     public List<Medicine> filter(String search) {
         List<Medicine> medicines = new ArrayList<>();

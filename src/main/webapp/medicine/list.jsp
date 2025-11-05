@@ -77,5 +77,21 @@
         </tr>
     </c:forEach>
 </table>
+<br/>
+<div align="center">
+    <c:if test="${totalPages > 1}">
+        <div>
+            <c:if test="${currentPage > 1}">
+                <a href="medicines?page=${currentPage - 1}&size=${currentSize}">&laquo; Предыдущая</a>
+            </c:if>
+
+            Страница ${currentPage} из ${totalPages}
+
+            <c:if test="${currentPage < totalPages}">
+                <a href="medicines?page=${currentPage + 1}&size=${currentSize}">Следующая &raquo;</a>
+            </c:if>
+        </div>
+    </c:if>
+</div>
 </body>
 </html>

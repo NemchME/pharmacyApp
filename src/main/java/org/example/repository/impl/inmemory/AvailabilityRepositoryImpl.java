@@ -30,6 +30,16 @@ public class AvailabilityRepositoryImpl implements AvailabilityOfMedicineReposit
     }
 
     @Override
+    public List<AvailabilityOfMedicine> findAll(int page, int size) {
+        return List.of();
+    }
+
+    @Override
+    public int countAll() {
+        return storageMap.size();
+    }
+
+    @Override
     public List<AvailabilityOfMedicine> filter(String search) {
         return List.of();
     }

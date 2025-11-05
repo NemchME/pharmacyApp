@@ -3,8 +3,6 @@ package org.example.sql.config;
 import org.example.exception.DBException;
 
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.sql.*;
 import java.util.Enumeration;
 import java.util.logging.Level;
@@ -25,10 +23,8 @@ public class DBConnection implements AutoCloseable {
             );
             LOGGER.info("Успешное подключение к БД!");
 
-            if (isDatabaseEmpty()) {
-                executeSQLScripts();
-                LOGGER.info("База данных инициализирована.");
-            }
+            executeSQLScripts();
+            LOGGER.info("База данных инициализирована.");
 
         } catch (Exception e) {
             LOGGER.log(Level.SEVERE, "Ошибка подключения к базе данных: " + e.getMessage(), e);
@@ -43,19 +39,19 @@ public class DBConnection implements AutoCloseable {
     @Override
     public void close() {
 
-            try {
-                if (connection != null && !connection.isClosed()) {
-                    try (Statement stmt = connection.createStatement()) {
-                        stmt.execute("SHUTDOWN");
-                    } catch (Exception e) {
-                        LOGGER.warning(e.getMessage());
-                    }
-                    connection.close();
-                    LOGGER.info("Соединение с БД закрыто.");
+        try {
+            if (connection != null && !connection.isClosed()) {
+                try (Statement stmt = connection.createStatement()) {
+                    stmt.execute("SHUTDOWN");
+                } catch (Exception e) {
+                    LOGGER.warning(e.getMessage());
                 }
-            } catch (SQLException e) {
-                LOGGER.log(Level.WARNING, "Ошибка при закрытии соединения", e);
+                connection.close();
+                LOGGER.info("Соединение с БД закрыто.");
             }
+        } catch (SQLException e) {
+            LOGGER.log(Level.WARNING, "Ошибка при закрытии соединения", e);
+        }
 
 
         deregisterDrivers();
@@ -64,31 +60,33 @@ public class DBConnection implements AutoCloseable {
 
     private void executeSQLScripts() {
         try (Statement statement = getConnection().createStatement()) {
+
+            statement.execute("DROP ALL OBJECTS");
+            LOGGER.info("База данных очищена (DROP ALL OBJECTS).");
             LOGGER.info("Запуск SQL-скриптов...");
-            String schemaSql = Files.readString(Path.of("src/main/java/org/example/sql/schema.sql"));
+
+            String schemaSql = readResourceFile("schema.sql");
             statement.execute(schemaSql);
 
-            String dataSql = Files.readString(Path.of("src/main/java/org/example/sql/data.sql"));
+            String dataSql = readResourceFile("data.sql");
             statement.execute(dataSql);
 
             LOGGER.info("SQL-скрипты успешно выполнены!");
-        } catch (SQLException e) {
+        } catch (SQLException | IOException e) {
             LOGGER.log(Level.SEVERE, "Ошибка при выполнении SQL-скриптов", e);
             throw new DBException(e.getMessage(), e);
-        } catch (IOException e) {
-            LOGGER.log(Level.SEVERE, "Ошибка при чтении SQL-файлов", e);
         }
     }
 
-    private boolean isDatabaseEmpty() throws SQLException {
-        String query = "SELECT COUNT(*) FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA='PUBLIC'";
-        try (Statement stmt = connection.createStatement();
-             ResultSet rs = stmt.executeQuery(query)) {
-            rs.next();
-            boolean empty = rs.getInt(1) == 0;
-            return empty;
+    private String readResourceFile(String resourcePath) throws IOException {
+        try (var inputStream = getClass().getClassLoader().getResourceAsStream(resourcePath)) {
+            if (inputStream == null) {
+                throw new IOException("Файл не найден в ресурсах: " + resourcePath);
+            }
+            return new String(inputStream.readAllBytes(), java.nio.charset.StandardCharsets.UTF_8);
         }
     }
+
 
     private void deregisterDrivers() {
         Enumeration<Driver> drivers = DriverManager.getDrivers();

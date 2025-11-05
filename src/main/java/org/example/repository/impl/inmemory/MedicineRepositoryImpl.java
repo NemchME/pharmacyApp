@@ -31,6 +31,16 @@ public class MedicineRepositoryImpl implements MedicineRepository {
     }
 
     @Override
+    public List<Medicine> findAll(int page, int size) {
+        return List.of();
+    }
+
+    @Override
+    public int countAll() {
+        return storageMap.size();
+    }
+
+    @Override
     public List<Medicine> filter(String search) {
         return List.of();
     }

@@ -7,12 +7,12 @@
 <div align="center" style="margin-bottom: 20px;">
     <table border="0" cellpadding="8" bgcolor="#cce5ff">
         <tr>
-            <td><a href="availabilityOfMedicines"><b>AvailabilityOfMedicines</b></a></td>
-            <td><a href="medicines"><b>Medicine</b></a></td>
-            <td><a href="orders"><b>Order</b></a></td>
-            <td><a href="pharmacies"><b>Pharmacy</b></a></td>
-            <td><a href="producers"><b>Producer</b></a></td>
-            <td><a href="users"><b>User</b></a></td>
+            <td><a href="availabilityOfMedicines?page=1&size=5"><b>AvailabilityOfMedicines</b></a></td>
+            <td><a href="medicines?page=1&size=5"><b>Medicine</b></a></td>
+            <td><a href="orders?page=1&size=5"><b>Order</b></a></td>
+            <td><a href="pharmacies?page=1&size=5"><b>Pharmacy</b></a></td>
+            <td><a href="producers?page=1&size=5"><b>Producer</b></a></td>
+            <td><a href="users?page=1&size=5"><b>User</b></a></td>
         </tr>
     </table>
 </div>
@@ -76,5 +76,22 @@
         </tr>
     </c:forEach>
 </table>
+
+<br/>
+<div align="center">
+    <c:if test="${totalPages > 1}">
+        <div>
+            <c:if test="${currentPage > 1}">
+                <a href="users?page=${currentPage - 1}&size=${currentSize}">&laquo; Предыдущая</a>
+            </c:if>
+
+            Страница ${currentPage} из ${totalPages}
+
+            <c:if test="${currentPage < totalPages}">
+                <a href="users?page=${currentPage + 1}&size=${currentSize}">Следующая &raquo;</a>
+            </c:if>
+        </div>
+    </c:if>
+</div>
 </body>
 </html>

@@ -34,6 +34,16 @@ public class ProducerRepositoryImpl implements ProducerRepository {
     }
 
     @Override
+    public List<Producer> findAll(int page, int size) {
+        return List.of();
+    }
+
+    @Override
+    public int countAll() {
+        return storageMap.size();
+    }
+
+    @Override
     public List<Producer> sort(String sort, String comparator) {
         return List.of();
     }

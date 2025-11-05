@@ -7,6 +7,8 @@ public interface CrudRepository<T, ID> {
     void save(T entity);
     Optional<T> findById(ID id);
     List<T> findAll();
+    List<T> findAll(int page, int size);
+    int countAll();
     List<T> filter(String search);
     List<T> sort(String sort, String comparator);
     void update(T entity);
