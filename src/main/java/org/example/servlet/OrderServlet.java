@@ -40,27 +40,32 @@ public class OrderServlet extends HttpServlet {
 
         String action = req.getParameter("action");
 
+        int page = 1;
+        int size = 10;
+        if (req.getParameter("page") != null) {
+            page = Integer.parseInt(req.getParameter("page"));
+            req.setAttribute("currentPage", page);
+        }
+        if (req.getParameter("size") != null) {
+            size = Integer.parseInt(req.getParameter("size"));
+            int totalPages = orderService.getTotalPages(size);
+            req.setAttribute("currentSize", size);
+            req.setAttribute("totalPages", totalPages);
+        }
+
         if (action == null || action.equals("list")) {
             String search = req.getParameter("search");
             String sort = req.getParameter("sort");
             String comparator = req.getParameter("comparator");
             List<Order> orders;
-            if (req.getParameter("page") != null && req.getParameter("size") != null) {
-                int page = Integer.parseInt(req.getParameter("page"));
-                int size = Integer.parseInt(req.getParameter("size"));
-                orders = orderService.findAll(page, size);
-                int totalPages = orderService.getTotalPages(size);
 
-                req.setAttribute("currentPage", page);
-                req.setAttribute("currentSize", size);
-                req.setAttribute("totalPages", totalPages);
-
-            } else if (search != null) {
+            if (search != null) {
                 orders = orderService.filter(search);
+                req.setAttribute("search", search);
             } else if (sort != null && comparator != null) {
                 orders = orderService.sort(sort, comparator);
             } else {
-                orders = orderService.findAll();
+                orders = orderService.findAll(page, size);
             }
             req.setAttribute("orders", orders);
             req.getRequestDispatcher("/order/list.jsp").forward(req, resp);
@@ -72,7 +77,7 @@ public class OrderServlet extends HttpServlet {
         } else if (action.equals("delete")) {
             Integer id = Integer.parseInt(req.getParameter("id"));
             orderService.delete(id);
-            resp.sendRedirect("orders");
+            resp.sendRedirect("orders?page=1&size=5");
         } else if (action.equals("new")) {
             req.getRequestDispatcher("/order/form.jsp").forward(req, resp);
         }
@@ -98,6 +103,6 @@ public class OrderServlet extends HttpServlet {
             orderService.update(order);
         }
 
-        resp.sendRedirect("orders");
+        resp.sendRedirect("orders?page=1&size=5");
     }
 }

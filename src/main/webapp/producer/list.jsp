@@ -7,6 +7,7 @@
 <div align="center" style="margin-bottom: 20px;">
     <table border="0" cellpadding="8" bgcolor="#cce5ff">
         <tr>
+            <td><a href="stats"><b>Статистика</b></a></td>
             <td><a href="availabilityOfMedicines?page=1&size=5"><b>AvailabilityOfMedicines</b></a></td>
             <td><a href="medicines?page=1&size=5"><b>Medicine</b></a></td>
             <td><a href="orders?page=1&size=5"><b>Order</b></a></td>
@@ -20,7 +21,7 @@
     <h2>Поиск по слову</h2>
     <form action="producers" method="get">
         <input type="hidden" name="action" value="list"/>
-        <input type="text" name="search" placeholder="Введите слово для поиска" value="${param.search}"/>
+        <input type="text" name="search" placeholder="Введите слово для поиска" value="${param.search}" required/>
 
         <input type="submit" value="Применить"/>
     </form>
@@ -50,6 +51,13 @@
 
 <br/>
 
+<div align="center">
+    <c:if test="${search != null}">
+        <div>
+            <h2>Результат поиска по слову: "${search}"</h2>
+        </div>
+    </c:if>
+</div>
 <table border="1" cellpadding="6" bgcolor="white" align="center">
     <tr bgcolor="#b3daff">
         <th>ID</th><th>Название</th><th>Страна</th><th></th>

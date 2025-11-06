@@ -15,7 +15,7 @@ public class OrderMenu implements Menu {
     private final Map<String, String> descriptionsMap = new LinkedHashMap<>();
 
     public OrderMenu() {
-        commandsMap.put("1.", new FindAllCommand());
+        commandsMap.put("1", new FindAllCommand());
         commandsMap.put("2", new CreateCommand());
         commandsMap.put("3", new ReadCommand());
         commandsMap.put("4", new UpdateCommand());

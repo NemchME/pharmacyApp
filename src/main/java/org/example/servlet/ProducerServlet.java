@@ -40,28 +40,35 @@ public class ProducerServlet extends HttpServlet {
 
         String action = req.getParameter("action");
 
+        int page = 1;
+        int size = 10;
+
+        if (req.getParameter("page") != null) {
+            page = Integer.parseInt(req.getParameter("page"));
+            req.setAttribute("currentPage", page);
+        }
+        if (req.getParameter("size") != null) {
+            size = Integer.parseInt(req.getParameter("size"));
+            int totalPages = producerService.getTotalPages(size);
+            req.setAttribute("currentSize", size);
+            req.setAttribute("totalPages", totalPages);
+        }
+
         if (action == null || action.equals("list")) {
             String search = req.getParameter("search");
             String sort = req.getParameter("sort");
             String comparator = req.getParameter("comparator");
             List<Producer> producers;
-            if (req.getParameter("page") != null && req.getParameter("size") != null) {
-                int page = Integer.parseInt(req.getParameter("page"));
-                int size = Integer.parseInt(req.getParameter("size"));
-                producers = producerService.findAll(page, size);
-                int totalPages = producerService.getTotalPages(size);
 
-                req.setAttribute("currentPage", page);
-                req.setAttribute("currentSize", size);
-                req.setAttribute("totalPages", totalPages);
-
-            } else if (search != null) {
+            if (search != null) {
                 producers = producerService.filter(search);
+                req.setAttribute("search", search);
             } else if (sort != null && comparator != null) {
                 producers = producerService.sort(sort, comparator);
             } else {
-                producers = producerService.findAll();
+                producers = producerService.findAll(page, size);
             }
+
             req.setAttribute("producers", producers);
             req.getRequestDispatcher("/producer/list.jsp").forward(req, resp);
         } else if (action.equals("edit")) {
@@ -72,7 +79,7 @@ public class ProducerServlet extends HttpServlet {
         } else if (action.equals("delete")) {
             Integer id = Integer.parseInt(req.getParameter("id"));
             producerService.delete(id);
-            resp.sendRedirect("producers");
+            resp.sendRedirect("producers?page=1&size=5");
         } else if (action.equals("new")) {
             req.getRequestDispatcher("/producer/form.jsp").forward(req, resp);
         }
@@ -95,6 +102,6 @@ public class ProducerServlet extends HttpServlet {
             producerService.update(producer);
         }
 
-        resp.sendRedirect("producers");
+        resp.sendRedirect("producers?page=1&size=5");
     }
 }

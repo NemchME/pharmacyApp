@@ -174,6 +174,7 @@ public class ProducerRepositoryImpl implements ProducerRepository {
     private Producer mapRow(ResultSet rs) throws SQLException {
         Producer producer = new Producer();
         producer.setId(rs.getInt("id"));
+        producer.setName(rs.getString("name"));
         producer.setCountry(rs.getString("country"));
         return producer;
     }

@@ -106,12 +106,12 @@ public class AvailabilityOfMedicineRepositoryImpl implements AvailabilityOfMedic
         String sql = "SELECT * FROM availability_of_medicine " +
                 "WHERE LOWER(CAST(id AS VARCHAR)) LIKE LOWER(?) OR LOWER(CAST(pharmacy_id AS VARCHAR)) LIKE LOWER(?) " +
                 "OR LOWER(CAST(medicine_id AS VARCHAR)) LIKE LOWER(?) OR LOWER(CAST(price AS VARCHAR)) LIKE LOWER(?) " +
-                "OR LOWER(CAST(quantity AS VARCHAR)) LIKE LOWER(?)";
+                "OR LOWER(CAST(quantity AS VARCHAR)) LIKE LOWER(?) OR LOWER(CAST(updated_at AS VARCHAR)) LIKE LOWER(?)";
 
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             String pattern = "%" + search + "%";
 
-            for (int i = 1; i <= 5; i++) {
+            for (int i = 1; i <= 6; i++) {
                 ps.setString(i, pattern);
             }
 

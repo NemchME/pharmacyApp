@@ -17,6 +17,7 @@ public class AppContext implements AutoCloseable {
     private final PharmacyService pharmacyService;
     private final ProducerService producerService;
     private final UserService userService;
+    private final StatsService statsService;
     private final DBConnection connection;
 
     private AppContext() {
@@ -29,6 +30,7 @@ public class AppContext implements AutoCloseable {
                 new AvailabilityOfMedicineRepositoryImpl(connection), this.pharmacyService, this.medicineService);
         this.orderService = new OrderService(
                 new OrderRepositoryImpl(connection), this.userService, this.medicineService, this.pharmacyService);
+        this.statsService = new StatsService(new StatsRepository(connection));
     }
 
     @Override
@@ -61,6 +63,10 @@ public class AppContext implements AutoCloseable {
 
     public ProducerService getProducerService() {
         return producerService;
+    }
+
+    public StatsService getIndexService() {
+        return statsService;
     }
 
     public UserService getUserService() {

@@ -40,28 +40,34 @@ public class AvailabilityOfMedicineServlet extends HttpServlet {
 
         String action = req.getParameter("action");
 
+        int page = 1;
+        int size = 10;
+        if (req.getParameter("page") != null) {
+            page = Integer.parseInt(req.getParameter("page"));
+            req.setAttribute("currentPage", page);
+        }
+        if (req.getParameter("size") != null) {
+            size = Integer.parseInt(req.getParameter("size"));
+            int totalPages = availabilityOfMedicineService.getTotalPages(size);
+            req.setAttribute("currentSize", size);
+            req.setAttribute("totalPages", totalPages);
+        }
+
         if (action == null || action.equals("list")) {
             String search = req.getParameter("search");
             String sort = req.getParameter("sort");
             String comparator = req.getParameter("comparator");
             List<AvailabilityOfMedicine> availabilityOfMedicines;
-            if (req.getParameter("page") != null && req.getParameter("size") != null) {
-                int page = Integer.parseInt(req.getParameter("page"));
-                int size = Integer.parseInt(req.getParameter("size"));
-                availabilityOfMedicines = availabilityOfMedicineService.findAll(page, size);
-                int totalPages = availabilityOfMedicineService.getTotalPages(size);
 
-                req.setAttribute("currentPage", page);
-                req.setAttribute("currentSize", size);
-                req.setAttribute("totalPages", totalPages);
-
-            } else if (search != null) {
+            if (search != null) {
                 availabilityOfMedicines = availabilityOfMedicineService.filter(search);
+                req.setAttribute("search", search);
             } else if (sort != null && comparator != null) {
                 availabilityOfMedicines = availabilityOfMedicineService.sort(sort, comparator);
             } else {
-                availabilityOfMedicines = availabilityOfMedicineService.findAll();
+                availabilityOfMedicines = availabilityOfMedicineService.findAll(page, size);
             }
+
             req.setAttribute("availabilityOfMedicines", availabilityOfMedicines);
             req.getRequestDispatcher("/availabilityOfMedicine/list.jsp").forward(req, resp);
         } else if (action.equals("edit")) {
@@ -73,7 +79,7 @@ public class AvailabilityOfMedicineServlet extends HttpServlet {
         } else if (action.equals("delete")) {
             Integer id = Integer.parseInt(req.getParameter("id"));
             availabilityOfMedicineService.delete(id);
-            resp.sendRedirect("availabilityOfMedicines");
+            resp.sendRedirect("availabilityOfMedicines?page=1&size=5");
         } else if (action.equals("new")) {
             req.getRequestDispatcher("/availabilityOfMedicine/form.jsp").forward(req, resp);
         }
@@ -99,6 +105,7 @@ public class AvailabilityOfMedicineServlet extends HttpServlet {
             availabilityOfMedicineService.update(availabilityOfMedicine);
         }
 
-        resp.sendRedirect("availabilityOfMedicines");
+
+        resp.sendRedirect("availabilityOfMedicines?page=1&size=5");
     }
 }

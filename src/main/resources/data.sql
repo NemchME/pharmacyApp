@@ -12,7 +12,6 @@ VALUES
     (108, 'Производитель 108', 'Китай'),
     (109, 'Производитель 109', 'Россия');
 
--- добавим остальные до 199
 INSERT INTO producer (id, name, country)
 SELECT x, CONCAT('Производитель ', x), 
        CASE MOD(x, 5)

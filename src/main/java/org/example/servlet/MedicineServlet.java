@@ -40,27 +40,32 @@ public class MedicineServlet extends HttpServlet {
 
         String action = req.getParameter("action");
 
+        int page = 1;
+        int size = 10;
+        if (req.getParameter("page") != null) {
+            page = Integer.parseInt(req.getParameter("page"));
+            req.setAttribute("currentPage", page);
+        }
+        if (req.getParameter("size") != null) {
+            size = Integer.parseInt(req.getParameter("size"));
+            int totalPages = medicineService.getTotalPages(size);
+            req.setAttribute("currentSize", size);
+            req.setAttribute("totalPages", totalPages);
+        }
+
         if (action == null || action.equals("list")) {
             String search = req.getParameter("search");
             String sort = req.getParameter("sort");
             String comparator = req.getParameter("comparator");
             List<Medicine> medicines;
-            if (req.getParameter("page") != null && req.getParameter("size") != null) {
-                int page = Integer.parseInt(req.getParameter("page"));
-                int size = Integer.parseInt(req.getParameter("size"));
-                medicines = medicineService.findAll(page, size);
-                int totalPages = medicineService.getTotalPages(size);
 
-                req.setAttribute("currentPage", page);
-                req.setAttribute("currentSize", size);
-                req.setAttribute("totalPages", totalPages);
-
-            } else if (search != null) {
+            if (search != null) {
                 medicines = medicineService.filter(search);
+                req.setAttribute("search", search);
             } else if (sort != null && comparator != null) {
                 medicines = medicineService.sort(sort, comparator);
             } else {
-                medicines = medicineService.findAll();
+                medicines = medicineService.findAll(page, size);
             }
             req.setAttribute("medicines", medicines);
             req.getRequestDispatcher("/medicine/list.jsp").forward(req, resp);
@@ -72,7 +77,7 @@ public class MedicineServlet extends HttpServlet {
         } else if (action.equals("delete")) {
             Integer id = Integer.parseInt(req.getParameter("id"));
             medicineService.delete(id);
-            resp.sendRedirect("medicines");
+            resp.sendRedirect("medicines?page=1&size=5");
         } else if (action.equals("new")) {
             req.getRequestDispatcher("/medicine/form.jsp").forward(req, resp);
         }
@@ -98,6 +103,6 @@ public class MedicineServlet extends HttpServlet {
             medicineService.update(medicine);
         }
 
-        resp.sendRedirect("medicines");
+        resp.sendRedirect("medicines?page=1&size=5");
     }
 }

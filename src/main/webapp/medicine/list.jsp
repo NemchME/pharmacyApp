@@ -7,12 +7,13 @@
 <div align="center" style="margin-bottom: 20px;">
     <table border="0" cellpadding="8" bgcolor="#cce5ff">
         <tr>
-            <td><a href="availabilityOfMedicines"><b>AvailabilityOfMedicines</b></a></td>
-            <td><a href="medicines"><b>Medicine</b></a></td>
-            <td><a href="orders"><b>Order</b></a></td>
-            <td><a href="pharmacies"><b>Pharmacy</b></a></td>
-            <td><a href="producers"><b>Producer</b></a></td>
-            <td><a href="users"><b>User</b></a></td>
+            <td><a href="stats"><b>Статистика</b></a></td>
+            <td><a href="availabilityOfMedicines?page=1&size=5"><b>AvailabilityOfMedicines</b></a></td>
+            <td><a href="medicines?page=1&size=5"><b>Medicine</b></a></td>
+            <td><a href="orders?page=1&size=5"><b>Order</b></a></td>
+            <td><a href="pharmacies?page=1&size=5"><b>Pharmacy</b></a></td>
+            <td><a href="producers?page=1&size=5"><b>Producer</b></a></td>
+            <td><a href="users?page=1&size=5"><b>User</b></a></td>
         </tr>
     </table>
 </div>
@@ -20,7 +21,7 @@
     <h2>Поиск по слову</h2>
     <form action="medicines" method="get">
         <input type="hidden" name="action" value="list"/>
-        <input type="text" name="search" placeholder="Введите слово для поиска" value="${param.search}"/>
+        <input type="text" name="search" placeholder="Введите слово для поиска" value="${param.search}" required/>
 
         <input type="submit" value="Применить"/>
     </form>
@@ -53,6 +54,13 @@
 
 <br/>
 
+<div align="center">
+    <c:if test="${search != null}">
+        <div>
+            <h2>Результат поиска по слову: "${search}"</h2>
+        </div>
+    </c:if>
+</div>
 <table border="1" cellpadding="6" bgcolor="white" align="center">
     <tr bgcolor="#b3daff">
         <th>ID</th><th>Торговое имя</th><th>ИНН</th><th>Дозировка</th><th>Форма</th><th>id поставщика</th><th></th>

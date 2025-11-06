@@ -7,6 +7,7 @@
 <div align="center" style="margin-bottom: 20px;">
     <table border="0" cellpadding="8" bgcolor="#cce5ff">
         <tr>
+            <td><a href="stats"><b>Статистика</b></a></td>
             <td><a href="availabilityOfMedicines?page=1&size=5"><b>AvailabilityOfMedicines</b></a></td>
             <td><a href="medicines?page=1&size=5"><b>Medicine</b></a></td>
             <td><a href="orders?page=1&size=5"><b>Order</b></a></td>
@@ -15,6 +16,7 @@
             <td><a href="users?page=1&size=5"><b>User</b></a></td>
         </tr>
     </table>
+</div>
 </div>
 
 
