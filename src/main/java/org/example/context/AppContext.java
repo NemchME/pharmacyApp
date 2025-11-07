@@ -1,5 +1,6 @@
 package org.example.context;
 
+import org.example.repository.AvailabilityOfMedicineRepository;
 import org.example.repository.impl.jdbc.*;
 import org.example.service.*;
 import org.example.sql.config.DBConnection;
@@ -18,6 +19,7 @@ public class AppContext implements AutoCloseable {
     private final ProducerService producerService;
     private final UserService userService;
     private final StatsService statsService;
+    private final AvailabilityInfoService availabilityInfoService;
     private final DBConnection connection;
 
     private AppContext() {
@@ -30,7 +32,8 @@ public class AppContext implements AutoCloseable {
                 new AvailabilityOfMedicineRepositoryImpl(connection), this.pharmacyService, this.medicineService);
         this.orderService = new OrderService(
                 new OrderRepositoryImpl(connection), this.userService, this.medicineService, this.pharmacyService);
-        this.statsService = new StatsService(new StatsRepository(connection));
+        this.statsService = new StatsService(new StatsRepositoryImpl(connection));
+        this.availabilityInfoService = new AvailabilityInfoService(new AvailabilityInfoRepositoryImpl(connection));
     }
 
     @Override
@@ -65,12 +68,16 @@ public class AppContext implements AutoCloseable {
         return producerService;
     }
 
-    public StatsService getIndexService() {
+    public StatsService getStatsService() {
         return statsService;
     }
 
     public UserService getUserService() {
         return userService;
+    }
+
+    public AvailabilityInfoService getAvailabilityInfoService() {
+        return availabilityInfoService;
     }
 
     public DBConnection getConnection() {

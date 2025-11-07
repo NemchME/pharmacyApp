@@ -1,6 +1,7 @@
 package org.example.repository.impl.jdbc;
 
 import org.example.exception.DBException;
+import org.example.repository.StatsRepository;
 import org.example.sql.config.DBConnection;
 
 import java.sql.Connection;
@@ -10,11 +11,11 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
-public class StatsRepository {
+public class StatsRepositoryImpl implements StatsRepository {
 
     private final Connection connection;
 
-    public StatsRepository(DBConnection dbConnection) {
+    public StatsRepositoryImpl(DBConnection dbConnection) {
         this.connection = dbConnection.getConnection();
     }
 

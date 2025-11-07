@@ -7,24 +7,25 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.example.context.AppContext;
-import org.example.service.StatsService;
+import org.example.model.AvailabilityInfo;
+import org.example.service.AvailabilityInfoService;
 
 import java.io.IOException;
-import java.util.Map;
+import java.util.List;
 import java.util.logging.Logger;
 
-@WebServlet("/stats")
-public class StatsServlet extends HttpServlet {
+@WebServlet("/availabilityInfo")
+public class AvailabilityInfoServlet extends HttpServlet {
 
-    private static final Logger LOGGER = Logger.getLogger(StatsServlet.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(AvailabilityInfoServlet.class.getName());
 
-    private StatsService statsService;
+    private AvailabilityInfoService availabilityInfoService;
 
     @Override
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
         try {
-            statsService = AppContext.getInstance().getStatsService();
+            availabilityInfoService = AppContext.getInstance().getAvailabilityInfoService();
             LOGGER.info("Запуск сервлета: " + this.getClass().getName());
         } catch (Exception e) {
             throw new ServletException("Не удалось инициализировать " + this.getClass().getName() + ": " +
@@ -35,9 +36,13 @@ public class StatsServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
-        Map<String, Integer> tableCounts = statsService.getTableCounts();
-        LOGGER.info("Число таблиц: " + tableCounts.toString());
-        req.setAttribute("tableCounts", tableCounts);
-        req.getRequestDispatcher("stats/list.jsp").forward(req, resp);
+        String medicineIdParam = req.getParameter("id");
+        if (medicineIdParam != null) {
+            int medicineId = Integer.parseInt(medicineIdParam);
+            List<AvailabilityInfo> availabilityInfoList = availabilityInfoService.getPharmaciesByMedicineId(medicineId);
+            req.setAttribute("availabilityList", availabilityInfoList);
+        }
+        req.setAttribute("id", medicineIdParam);
+        req.getRequestDispatcher("/availabilityInfo/list.jsp").forward(req, resp);
     }
 }

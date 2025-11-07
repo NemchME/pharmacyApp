@@ -4,7 +4,6 @@
     <title>Форма аптеки</title>
 </head>
 <body bgcolor="#e6f2ff">
-<body>
 <div align="center" style="margin-bottom: 20px;">
     <table border="0" cellpadding="8" bgcolor="#cce5ff">
         <tr>

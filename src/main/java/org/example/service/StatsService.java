@@ -1,14 +1,14 @@
 package org.example.service;
 
-import org.example.repository.impl.jdbc.StatsRepository;
+import org.example.repository.impl.jdbc.StatsRepositoryImpl;
 
 import java.util.Map;
 
 public class StatsService {
 
-    private final StatsRepository statsRepository;
+    private final StatsRepositoryImpl statsRepository;
 
-    public StatsService(StatsRepository statsRepository) {
+    public StatsService(StatsRepositoryImpl statsRepository) {
         this.statsRepository = statsRepository;
     }
 

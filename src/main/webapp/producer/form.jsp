@@ -2,7 +2,7 @@
 
 <html>
 <head><title>Форма производителя</title></head>
-<body>
+<body bgcolor="#e6f2ff">
 <div align="center" style="margin-bottom: 20px;">
     <table border="0" cellpadding="8" bgcolor="#cce5ff">
         <tr>
