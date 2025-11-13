@@ -31,7 +31,7 @@ public class CreateCommand implements Command {
                     Validator.requireNotBlank(entityArgs[4], "Введите status")
             );
             consoleApp.getOrderService().save(entity);
-            System.out.println("Сущность сохранена с id: " + entity.getId());
+            System.out.println("Сущность сохранена");
         } catch (IndexOutOfBoundsException e) {
             System.out.println(
                     "Ошибка: Введите следующие поля: user_id, medicine_id, pharmacy_id, quantily, status");
