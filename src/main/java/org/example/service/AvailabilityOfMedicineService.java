@@ -1,7 +1,9 @@
 package org.example.service;
 
 import org.example.exception.EntityNotFoundException;
+import org.example.model.AvailabilityInfo;
 import org.example.model.AvailabilityOfMedicine;
+import org.example.model.PharmacyInfo;
 import org.example.repository.AvailabilityOfMedicineRepository;
 
 import java.util.List;
@@ -68,5 +70,13 @@ public class AvailabilityOfMedicineService {
 
     private boolean checkForeignKeys(Integer pharmacyId, Integer medicineId) {
         return pharmacyService.findById(pharmacyId) != null && medicineService.findById(medicineId) != null;
+    }
+
+    public List<AvailabilityInfo> findByMedicineId(Integer medicineId) {
+        return availabilityOfMedicineRepository.findByMedicineId(medicineId);
+    }
+
+    public List<PharmacyInfo> findByPharmacyId(Integer pharmacyId) {
+        return availabilityOfMedicineRepository.findByPharmacyId(pharmacyId);
     }
 }

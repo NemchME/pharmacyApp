@@ -2,6 +2,7 @@ package org.example.service;
 
 import org.example.exception.EntityNotFoundException;
 import org.example.model.Order;
+import org.example.model.OrderInfo;
 import org.example.repository.OrderRepository;
 
 import java.util.List;
@@ -71,5 +72,9 @@ public class OrderService {
     private boolean checkForeignKeys(Integer userId, Integer medicineId, Integer pharmacyId) {
         return userService.findById(userId) != null && medicineService.findById(medicineId) != null &&
                 pharmacyService.findById(pharmacyId) != null;
+    }
+
+    public List<OrderInfo> findByUserId(Integer userId) {
+        return orderRepository.findByUserId(userId);
     }
 }

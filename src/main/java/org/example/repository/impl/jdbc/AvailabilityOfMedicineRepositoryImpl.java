@@ -1,9 +1,8 @@
 package org.example.repository.impl.jdbc;
 
 import org.example.exception.DBException;
+import org.example.model.*;
 import org.example.model.AvailabilityOfMedicine;
-import org.example.model.AvailabilityOfMedicine;
-import org.example.model.Pharmacy;
 import org.example.repository.AvailabilityOfMedicineRepository;
 import org.example.sql.config.DBConnection;
 
@@ -189,5 +188,69 @@ public class AvailabilityOfMedicineRepositoryImpl implements AvailabilityOfMedic
         availabilityOfMedicine.setQuantity(rs.getInt("quantity"));
         availabilityOfMedicine.setUpdatedAt(rs.getTimestamp("updated_at"));
         return availabilityOfMedicine;
+    }
+
+    @Override
+    public List<AvailabilityInfo> findByMedicineId(Integer medicineId) {
+        List<AvailabilityInfo> availabilityInfoList = new ArrayList<>();
+
+        String sql = """
+        SELECT p.name AS pharmacy_name,
+               p.way_from_center,
+               a.quantity,
+               a.price
+        FROM availability_of_medicine a
+        JOIN pharmacy p ON a.pharmacy_id = p.id
+        WHERE a.medicine_id = ?
+    """;
+
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, medicineId);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                AvailabilityInfo availabilityInfo = new AvailabilityInfo();
+                availabilityInfo.setPharmacyName(rs.getString("pharmacy_name"));
+                availabilityInfo.setWayFromCenter(rs.getString("way_from_center"));
+                availabilityInfo.setQuantity(rs.getInt("quantity"));
+                availabilityInfo.setPrice(rs.getFloat("price"));
+                availabilityInfoList.add(availabilityInfo);
+            }
+
+            return availabilityInfoList;
+        } catch (SQLException e) {
+            throw new DBException(e.getMessage(), e);
+        }
+    }
+
+    @Override
+    public List<PharmacyInfo> findByPharmacyId(Integer pharmacyId) {
+        List<PharmacyInfo> pharmacyInfoList = new ArrayList<>();
+
+        String sql = """
+        SELECT m.trade_name AS medicine_name,
+               a.price,
+               a.quantity,
+               a.updated_at
+        FROM availability_of_medicine a
+        JOIN medicine m ON a.medicine_id = m.id
+        WHERE a.pharmacy_id = ?
+    """;
+
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, pharmacyId);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                PharmacyInfo pharmacyInfo = new PharmacyInfo();
+                pharmacyInfo.setMedicineName(rs.getString("medicine_name"));
+                pharmacyInfo.setPrice(rs.getFloat("price"));
+                pharmacyInfo.setQuantity(rs.getInt("quantity"));
+                pharmacyInfo.setUpdatedAt(rs.getTimestamp("updated_at"));
+                pharmacyInfoList.add(pharmacyInfo);
+            }
+
+            return pharmacyInfoList;
+        } catch (SQLException e) {
+            throw new DBException(e.getMessage(), e);
+        }
     }
 }

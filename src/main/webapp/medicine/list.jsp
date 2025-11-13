@@ -74,7 +74,7 @@
             <td><c:out value="${medicine.dosage}"/></td>
             <td><c:out value="${medicine.form}"/></td>
             <td><c:out value="${medicine.producerId}"/></td>
-            <td>
+            <td align="center">
                 <a href="availabilityInfo?id=${medicine.id}">
                     <button type="button" style="background-color: lightgreen;">Наличие в аптеках</button>
                 </a>
