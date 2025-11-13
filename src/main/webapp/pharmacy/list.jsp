@@ -85,6 +85,9 @@
             <td><c:out value="${pharmacy.workingHours}"/></td>
             <td><c:out value="${pharmacy.wayFromCenter}"/></td>
             <td align="center">
+                <a href="pharmacyInfo?pharmacyId=${pharmacy.id}">
+                    <button type="button" style="background-color: lightgreen;">Лекарства в наличии</button>
+                </a>
                 <a href="pharmacies?action=edit&id=${pharmacy.id}">
                     <button type="button" style="background-color: lightblue;">Редактировать</button>
                 </a>

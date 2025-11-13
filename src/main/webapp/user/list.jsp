@@ -74,6 +74,9 @@
             <td><c:out value="${user.role}"/></td>
             
             <td align="center">
+                <a href="orderInfo?userId=${user.id}">
+                    <button type="button" style="background-color: lightgreen;">Заказы</button>
+                </a>
                 <a href="users?action=edit&id=${user.id}">
                     <button type="button" style="background-color: lightblue;">Редактировать</button>
                 </a>
