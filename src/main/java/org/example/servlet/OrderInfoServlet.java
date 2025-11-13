@@ -7,25 +7,25 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.example.context.AppContext;
-import org.example.model.AvailabilityInfo;
-import org.example.service.AvailabilityOfMedicineService;
+import org.example.model.OrderInfo;
+import org.example.service.OrderService;
 
 import java.io.IOException;
 import java.util.List;
 import java.util.logging.Logger;
 
-@WebServlet("/availabilityInfo")
-public class AvailabilityInfoServlet extends HttpServlet {
+@WebServlet("/orderInfo")
+public class OrderInfoServlet extends HttpServlet {
 
-    private static final Logger LOGGER = Logger.getLogger(AvailabilityInfoServlet.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(OrderInfoServlet.class.getName());
 
-    private AvailabilityOfMedicineService availabilityOfMedicineService;
+    private OrderService orderService;
 
     @Override
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
         try {
-            availabilityOfMedicineService = AppContext.getInstance().getAvailabilityOfMedicineService();
+            orderService = AppContext.getInstance().getOrderService();
             LOGGER.info("Запуск сервлета: " + this.getClass().getName());
         } catch (Exception e) {
             throw new ServletException("Не удалось инициализировать " + this.getClass().getName() + ": " +
@@ -36,13 +36,13 @@ public class AvailabilityInfoServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
-        String medicineIdParam = req.getParameter("id");
-        if (medicineIdParam != null) {
-            int medicineId = Integer.parseInt(medicineIdParam);
-            List<AvailabilityInfo> availabilityInfoList = availabilityOfMedicineService.findByMedicineId(medicineId);
-            req.setAttribute("availabilityList", availabilityInfoList);
+        String userIdParam = req.getParameter("userId");
+        if (userIdParam != null) {
+            int userId = Integer.parseInt(userIdParam);
+            List<OrderInfo> orderInfoList = orderService.findByUserId(userId);
+            req.setAttribute("orderInfoList", orderInfoList);
         }
-        req.setAttribute("id", medicineIdParam);
-        req.getRequestDispatcher("/availabilityInfo/list.jsp").forward(req, resp);
+        req.setAttribute("userId", userIdParam);
+        req.getRequestDispatcher("/orderInfo/list.jsp").forward(req, resp);
     }
 }

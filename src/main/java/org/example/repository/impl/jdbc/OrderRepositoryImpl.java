@@ -1,7 +1,9 @@
 package org.example.repository.impl.jdbc;
 
 import org.example.exception.DBException;
+import org.example.model.AvailabilityInfo;
 import org.example.model.Order;
+import org.example.model.OrderInfo;
 import org.example.repository.OrderRepository;
 import org.example.sql.config.DBConnection;
 
@@ -53,8 +55,8 @@ public class OrderRepositoryImpl implements OrderRepository {
 
     @Override
     public void save(Order entity) {
-        String sql = "INSERT INTO orders (user_id, medicine_id, pharmacy_id, quantity, status) " +
-                "VALUES (?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO orders (user_id, medicine_id, pharmacy_id, quantity, status, created_at) " +
+                "VALUES (?, ?, ?, ?, ?, ?)";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setInt(1, entity.getUserId());
             ps.setInt(2, entity.getMedicineId());
@@ -196,5 +198,41 @@ public class OrderRepositoryImpl implements OrderRepository {
         order.setStatus(rs.getString("status"));
         order.setCreatedAt(rs.getTimestamp("created_at"));
         return order;
+    }
+
+    @Override
+    public List<OrderInfo> findByUserId(Integer userId) {
+        List<OrderInfo> orderInfoList = new ArrayList<>();
+
+        String sql = """
+                    SELECT
+                        m.trade_name AS medicine_name,
+                        p.name AS pharmacy_name,
+                        o.quantity,
+                        o.status,
+                        o.created_at
+                    FROM orders o
+                    JOIN medicine m ON o.medicine_id = m.id
+                    JOIN pharmacy p ON o.pharmacy_id = p.id
+                    WHERE o.user_id = ?;
+                """;
+
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, userId);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                OrderInfo orderInfo = new OrderInfo();
+                orderInfo.setMedicineName(rs.getString("medicine_name"));
+                orderInfo.setPharmacyName(rs.getString("pharmacy_name"));
+                orderInfo.setQuantity(rs.getInt("quantity"));
+                orderInfo.setStatus(rs.getString("status"));
+                orderInfo.setCreatedAt(rs.getTimestamp("created_at"));
+                orderInfoList.add(orderInfo);
+            }
+
+            return orderInfoList;
+        } catch (SQLException e) {
+            throw new DBException(e.getMessage(), e);
+        }
     }
 }

@@ -6,10 +6,10 @@
 <body bgcolor="#e6f2ff">
 <div align="center">
 <c:if test="${availabilityList == null}">
-<p>Не удалось найти данные о доступности препарата с id "${id}"</p>
+<p>Не удалось найти данные о доступности препарата с id="${id}"</p>
 </c:if>
 <c:if test="${availabilityList != null}">
-    <h2>Аптеки, где есть выбранный препарат:</h2>
+    <h2>Аптеки, где есть препарат с id="${id}:</h2>
     <table border="1" cellpadding="5">
         <tr bgcolor="#b3daff">
             <th>Аптека</th>
@@ -27,6 +27,8 @@
         </c:forEach>
     </table>
 </c:if>
+
+<a href="medicines?page=1&size=5">Вернуться к списку препаратов</a>
 </div>
 </body>
 </html>

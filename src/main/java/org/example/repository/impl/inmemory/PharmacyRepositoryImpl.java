@@ -1,5 +1,6 @@
 package org.example.repository.impl.inmemory;
 
+import org.example.model.AvailabilityInfo;
 import org.example.model.Pharmacy;
 import org.example.repository.PharmacyRepository;
 
@@ -58,4 +59,5 @@ public class PharmacyRepositoryImpl implements PharmacyRepository {
     public void delete(Integer id) {
         storageMap.remove(id);
     }
+
 }
