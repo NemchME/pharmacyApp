@@ -154,12 +154,15 @@ public class UserRepositoryImpl implements UserRepository {
 
     @Override
     public void update(User entity) {
-        String sql = "UPDATE users SET username=?, password_hash=?, email=?, role=?";
+        String sql = "UPDATE users " +
+                "SET username=?, password_hash=?, email=?, role=? " +
+                "WHERE id=?";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setString(1, entity.getUsername());
             ps.setString(2, entity.getPasswordHash());
             ps.setString(3, entity.getEmail());
             ps.setString(4, entity.getRole());
+            ps.setInt(5, entity.getId());
             ps.executeUpdate();
         } catch (SQLException e) {
             throw new DBException(e.getMessage(), e);

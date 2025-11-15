@@ -156,12 +156,15 @@ public class AvailabilityOfMedicineRepositoryImpl implements AvailabilityOfMedic
 
     @Override
     public void update(AvailabilityOfMedicine entity) {
-        String sql = "UPDATE availability_of_medicine SET pharmacy_id=?, medicine_id=?, price=?, quantity=?";
+        String sql = "UPDATE availability_of_medicine " +
+                "SET pharmacy_id=?, medicine_id=?, price=?, quantity=? " +
+                "WHERE id=?";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setInt(1, entity.getPharmacyId());
             ps.setInt(2, entity.getMedicineId());
             ps.setFloat(3, entity.getPrice());
             ps.setInt(4, entity.getQuantity());
+            ps.setInt(5, entity.getId());
             ps.executeUpdate();
         } catch (SQLException e) {
             throw new DBException(e.getMessage(), e);

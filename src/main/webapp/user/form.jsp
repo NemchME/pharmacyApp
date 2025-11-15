@@ -31,7 +31,7 @@
         </tr>
         <tr>
             <td align="right"><b>Пароль:</b></td>
-            <td><input type="password" name="country" value="${user.country}" size="40" required></td>
+            <td><input type="password" name="passwordHash" value="${user.passwordHash}" size="40" required></td>
         </tr>
         <tr>
             <td align="right"><b>Эл. почта:</b></td>

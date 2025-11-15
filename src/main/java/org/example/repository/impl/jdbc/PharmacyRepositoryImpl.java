@@ -157,13 +157,16 @@ public class PharmacyRepositoryImpl implements PharmacyRepository {
 
     @Override
     public void update(Pharmacy entity) {
-        String sql = "UPDATE pharmacy SET name=?, address=?, phone=?, working_hours=?, way_from_center=?";
+        String sql = "UPDATE pharmacy " +
+                "SET name=?, address=?, phone=?, working_hours=?, way_from_center=? " +
+                "WHERE id=?";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setString(1, entity.getName());
             ps.setString(2, entity.getAddress());
             ps.setString(3, entity.getPhone());
             ps.setString(4, entity.getWorkingHours());
             ps.setString(5, entity.getWayFromCenter());
+            ps.setInt(6, entity.getId());
             ps.executeUpdate();
         } catch (SQLException e) {
             throw new DBException(e.getMessage(), e);

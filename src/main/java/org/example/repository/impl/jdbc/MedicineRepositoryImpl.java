@@ -158,13 +158,16 @@ public class MedicineRepositoryImpl implements MedicineRepository {
 
     @Override
     public void update(Medicine entity) {
-        String sql = "UPDATE medicine SET trade_name=?, inn=?, dosage=?, form=?, producer_id=?";
+        String sql = "UPDATE medicine " +
+                "SET trade_name=?, inn=?, dosage=?, form=?, producer_id=? " +
+                "WHERE id=?";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setString(1, entity.getTradeName());
             ps.setString(2, entity.getInn());
             ps.setString(3, entity.getDosage());
             ps.setString(4, entity.getForm());
             ps.setInt(5, entity.getProducerId());
+            ps.setInt(6, entity.getId());
             ps.executeUpdate();
         } catch (SQLException e) {
             throw new DBException(e.getMessage(), e);

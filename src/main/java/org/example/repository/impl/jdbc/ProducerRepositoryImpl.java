@@ -150,10 +150,13 @@ public class ProducerRepositoryImpl implements ProducerRepository {
 
     @Override
     public void update(Producer entity) {
-        String sql = "UPDATE producer SET name=?, country=?";
+        String sql = "UPDATE producer " +
+                "SET name=?, country=? " +
+                "WHERE id=?";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setString(1, entity.getName());
             ps.setString(2, entity.getCountry());
+            ps.setInt(3, entity.getId());
             ps.executeUpdate();
         } catch (SQLException e) {
             throw new DBException(e.getMessage(), e);

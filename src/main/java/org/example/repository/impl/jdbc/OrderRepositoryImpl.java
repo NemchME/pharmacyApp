@@ -164,13 +164,16 @@ public class OrderRepositoryImpl implements OrderRepository {
 
     @Override
     public void update(Order entity) {
-        String sql = "UPDATE orders SET user_id=?, medicine_id=?, pharmacy_id=?, quantity=?, status=?";
+        String sql = "UPDATE orders " +
+                "SET user_id=?, medicine_id=?, pharmacy_id=?, quantity=?, status=? " +
+                "WHERE id=?";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setInt(1, entity.getUserId());
             ps.setInt(2, entity.getMedicineId());
             ps.setInt(3, entity.getPharmacyId());
             ps.setInt(4, entity.getQuantity());
             ps.setString(5, entity.getStatus());
+            ps.setInt(6, entity.getId());
             ps.executeUpdate();
         } catch (SQLException e) {
             throw new DBException(e.getMessage(), e);
