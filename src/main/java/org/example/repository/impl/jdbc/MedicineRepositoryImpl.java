@@ -1,6 +1,7 @@
 package org.example.repository.impl.jdbc;
 
 import org.example.exception.DBException;
+import org.example.exception.NotUniqueValueException;
 import org.example.model.Medicine;
 import org.example.repository.MedicineRepository;
 import org.example.sql.config.DBConnection;
@@ -30,6 +31,8 @@ public class MedicineRepositoryImpl implements MedicineRepository {
             ps.setInt(5, entity.getProducerId());
             ps.executeUpdate();
 
+        } catch (SQLIntegrityConstraintViolationException e) {
+            throw new NotUniqueValueException("ИНН должен быть уникальным!", e);
         } catch (SQLException e) {
             throw new DBException(e.getMessage(), e);
         }
@@ -169,6 +172,8 @@ public class MedicineRepositoryImpl implements MedicineRepository {
             ps.setInt(5, entity.getProducerId());
             ps.setInt(6, entity.getId());
             ps.executeUpdate();
+        } catch (SQLIntegrityConstraintViolationException e) {
+            throw new NotUniqueValueException("ИНН должен быть уникальным!", e);
         } catch (SQLException e) {
             throw new DBException(e.getMessage(), e);
         }

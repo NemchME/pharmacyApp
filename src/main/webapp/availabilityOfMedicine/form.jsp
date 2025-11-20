@@ -1,4 +1,5 @@
 <%@ page contentType="text/html; charset=UTF-8" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 
 <html>
 <head><title>Форма доступности препарата</title></head>
@@ -25,12 +26,26 @@
 
             <table border="0" cellpadding="6">
                 <tr>
-                    <td align="right"><b>id аптеки:</b></td>
-                    <td><input type="number" name="pharmacyId" value="${availabilityOfMedicine.pharmacyId}" size="40" required></td>
+                                    <td align="right"><b>Аптека:</b></td>
+                                    <td><select name="pharmacyId" required>
+                                            <c:forEach var="pharmacy" items="${pharmacies}">
+                                                <option value="${pharmacy.id}">
+                                                    ${pharmacy.name} — ${pharmacy.address}
+                                                </option>
+                                            </c:forEach>
+                                        </select>
+                                    </td>
                 </tr>
                 <tr>
-                    <td align="right"><b>id препарата:</b></td>
-                    <td><input type="number" name="medicineId" value="${availabilityOfMedicine.medicineId}" size="40" required></td>
+                                    <td align="right"><b>Препарат:</b></td>
+                                    <td><select name="medicineId" required>
+                                            <c:forEach var="medicine" items="${medicines}">
+                                                <option value="${medicine.id}">
+                                                    ${medicine.tradeName}
+                                                </option>
+                                            </c:forEach>
+                                        </select>
+                                    </td>
                 </tr>
                 <tr>
                     <td align="right"><b>Цена:</b></td>

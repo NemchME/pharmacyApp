@@ -79,4 +79,12 @@ public class AvailabilityOfMedicineService {
     public List<PharmacyInfo> findByPharmacyId(Integer pharmacyId) {
         return availabilityOfMedicineRepository.findByPharmacyId(pharmacyId);
     }
+
+    public PharmacyService getPharmacyService() {
+        return pharmacyService;
+    }
+
+    public MedicineService getMedicineService() {
+        return medicineService;
+    }
 }

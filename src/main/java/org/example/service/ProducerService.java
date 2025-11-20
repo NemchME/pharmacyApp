@@ -52,7 +52,9 @@ public class ProducerService {
         return producerRepository.sort(sort, comparator);
     }
 
+
     public void delete(Integer id) {
         producerRepository.delete(id);
     }
+
 }

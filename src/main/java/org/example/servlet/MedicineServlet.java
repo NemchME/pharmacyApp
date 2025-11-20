@@ -7,6 +7,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.example.context.AppContext;
+import org.example.exception.NotUniqueValueException;
 import org.example.model.Medicine;
 import org.example.service.MedicineService;
 
@@ -69,23 +70,30 @@ public class MedicineServlet extends HttpServlet {
             }
             req.setAttribute("medicines", medicines);
             req.getRequestDispatcher("/medicine/list.jsp").forward(req, resp);
-        } else if (action.equals("edit")) {
-            Integer id = Integer.parseInt(req.getParameter("id"));
-            Optional<Medicine> medicine = Optional.ofNullable(medicineService.findById(id));
-            req.setAttribute("medicine", medicine.orElse(null));
-            req.getRequestDispatcher("/medicine/form.jsp").forward(req, resp);
-        } else if (action.equals("delete")) {
-            Integer id = Integer.parseInt(req.getParameter("id"));
-            medicineService.delete(id);
-            resp.sendRedirect("medicines?page=1&size=5");
-        } else if (action.equals("new")) {
-            req.getRequestDispatcher("/medicine/form.jsp").forward(req, resp);
+        } else {
+            req.setAttribute("producers", medicineService.getProducerService().findAll());
+            switch (action) {
+                case "edit" -> {
+                    Integer id = Integer.parseInt(req.getParameter("id"));
+                    Optional<Medicine> medicine = Optional.ofNullable(medicineService.findById(id));
+                    req.setAttribute("medicine", medicine.orElse(null));
+                    req.getRequestDispatcher("/medicine/form.jsp").forward(req, resp);
+                }
+                case "delete" -> {
+                    Integer id = Integer.parseInt(req.getParameter("id"));
+                    medicineService.delete(id);
+                    resp.sendRedirect("medicines?page=1&size=5");
+                }
+                case "new" -> {
+                    req.getRequestDispatcher("/medicine/form.jsp").forward(req, resp);
+                }
+            }
         }
     }
 
     @Override
     public void doPost(HttpServletRequest req, HttpServletResponse resp)
-            throws IOException {
+            throws ServletException, IOException {
 
         String idStr = req.getParameter("id");
         String tradeName = req.getParameter("tradeName");
@@ -96,13 +104,20 @@ public class MedicineServlet extends HttpServlet {
 
         Medicine medicine = new Medicine(tradeName, inn, dosage, form, producerId);
 
-        if (idStr == null || idStr.isBlank()) {
-            medicineService.save(medicine);
-        } else {
-            medicine.setId(Integer.parseInt(idStr));
-            medicineService.update(medicine);
+        try {
+            if (idStr == null || idStr.isBlank()) {
+                medicineService.save(medicine);
+            } else {
+                medicine.setId(Integer.parseInt(idStr));
+                medicineService.update(medicine);
+            }
+            resp.sendRedirect("medicines?page=1&size=5");
+        } catch (NotUniqueValueException e) {
+            req.setAttribute("innError", e.getMessage());
+            req.setAttribute("medicine", medicine);
+            req.setAttribute("producers", medicineService.getProducerService().findAll());
+            req.getRequestDispatcher("medicine/form.jsp").forward(req, resp);
         }
 
-        resp.sendRedirect("medicines?page=1&size=5");
     }
 }

@@ -1,4 +1,5 @@
 <%@ page contentType="text/html; charset=UTF-8" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 
 <html>
 <head><title>Форма препарата</title></head>
@@ -19,7 +20,7 @@
 </div>
 
 <div align="center">
-<h1>${medicine != null ? "Редактирование препарата" : "Добавление препарата"}</h1>
+<h1>${medicine.id != null ? "Редактирование препарата" : "Добавление препарата"}</h1>
 <form action="medicines" method="post">
     <input type="hidden" name="id" value="${medicine.id}" />
 
@@ -30,9 +31,16 @@
             </tr>
             <tr>
                 <td align="right"><b>ИНН:</b></td>
-                <td><input type="text" name="inn" value="${medicine.inn}" size="40" required></td>
+                <td>
+                    <input type="text" name="inn" value="${medicine.inn}" size="40" required><br>
+
+                    <c:if test="${not empty innError}">
+                        <span style="color: red; font-size: 12px;">
+                            ${innError}
+                        </span>
+                    </c:if>
+                </td>
             </tr>
-            <tr>
                 <td align="right"><b>Дозировка:</b></td>
                 <td><input type="text" name="dosage" value="${medicine.dosage}" size="40" required></td>
             </tr>
@@ -41,8 +49,15 @@
                 <td><input type="text" name="form" value="${medicine.form}" size="40" required></td>
             </tr>
             <tr>
-                <td align="right"><b>id поставщика:</b></td>
-                <td><input type="number" name="producerId" value="${medicine.producerId}" size="40" required></td>
+                <td align="right"><b>Поставщик:</b></td>
+                <td><select name="producerId" required>
+                        <c:forEach var="producer" items="${producers}">
+                            <option value="${producer.id}">
+                                ${producer.name} — ${producer.country}
+                            </option>
+                        </c:forEach>
+                    </select>
+                </td>
             </tr>
             <tr>
                 <td colspan="2" align="center">

@@ -7,7 +7,7 @@
 CREATE TABLE IF NOT EXISTS medicine (
     id SERIAL PRIMARY KEY,
     trade_name VARCHAR(255) NOT NULL,
-    inn VARCHAR(255),
+    inn VARCHAR(255) UNIQUE,
     dosage VARCHAR(100),
     form VARCHAR(100),
     producer_id INT REFERENCES producer(id) ON DELETE CASCADE
@@ -24,7 +24,7 @@ CREATE TABLE IF NOT EXISTS pharmacy (
 
 CREATE TABLE IF NOT EXISTS users (
     id SERIAL PRIMARY KEY,
-    username VARCHAR(100) NOT NULL,
+    username VARCHAR(100) NOT NULL UNIQUE,
     password_hash VARCHAR(255) NOT NULL,
     email VARCHAR(255),
     role VARCHAR(50)

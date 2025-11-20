@@ -1,6 +1,7 @@
 package org.example.repository.impl.jdbc;
 
 import org.example.exception.DBException;
+import org.example.exception.NotUniqueValueException;
 import org.example.model.User;
 import org.example.repository.UserRepository;
 import org.example.sql.config.DBConnection;
@@ -29,6 +30,8 @@ public class UserRepositoryImpl implements UserRepository {
             ps.setString(4, entity.getRole());
             ps.executeUpdate();
 
+        } catch (SQLIntegrityConstraintViolationException e) {
+            throw new NotUniqueValueException("Никнейм должен быть уникальным!", e);
         } catch (SQLException e) {
             throw new DBException(e.getMessage(), e);
         }
@@ -164,6 +167,8 @@ public class UserRepositoryImpl implements UserRepository {
             ps.setString(4, entity.getRole());
             ps.setInt(5, entity.getId());
             ps.executeUpdate();
+        } catch (SQLIntegrityConstraintViolationException e) {
+            throw new NotUniqueValueException("Никнейм должен быть уникальным!", e);
         } catch (SQLException e) {
             throw new DBException(e.getMessage(), e);
         }

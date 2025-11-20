@@ -2,6 +2,8 @@ package org.example.service;
 
 import org.example.exception.EntityNotFoundException;
 import org.example.model.Medicine;
+import org.example.model.Pharmacy;
+import org.example.model.Producer;
 import org.example.repository.MedicineRepository;
 
 import java.util.List;
@@ -64,4 +66,9 @@ public class MedicineService {
     private boolean checkForeignKey(Integer producerId) {
         return producerService.findById(producerId) != null;
     }
+
+    public ProducerService getProducerService() {
+        return producerService;
+    }
+
 }

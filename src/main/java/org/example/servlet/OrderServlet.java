@@ -69,17 +69,24 @@ public class OrderServlet extends HttpServlet {
             }
             req.setAttribute("orders", orders);
             req.getRequestDispatcher("/order/list.jsp").forward(req, resp);
-        } else if (action.equals("edit")) {
-            Integer id = Integer.parseInt(req.getParameter("id"));
-            Optional<Order> order = Optional.ofNullable(orderService.findById(id));
-            req.setAttribute("order", order.orElse(null));
-            req.getRequestDispatcher("/order/form.jsp").forward(req, resp);
-        } else if (action.equals("delete")) {
-            Integer id = Integer.parseInt(req.getParameter("id"));
-            orderService.delete(id);
-            resp.sendRedirect("orders?page=1&size=5");
-        } else if (action.equals("new")) {
-            req.getRequestDispatcher("/order/form.jsp").forward(req, resp);
+        } else {
+            req.setAttribute("users", orderService.getUserService().findAll());
+            req.setAttribute("pharmacies", orderService.getPharmacyService().findAll());
+            req.setAttribute("medicines", orderService.getMedicineService().findAll());
+            switch (action) {
+                case "edit" -> {
+                    Integer id = Integer.parseInt(req.getParameter("id"));
+                    Optional<Order> order = Optional.ofNullable(orderService.findById(id));
+                    req.setAttribute("order", order.orElse(null));
+                    req.getRequestDispatcher("/order/form.jsp").forward(req, resp);
+                }
+                case "delete" -> {
+                    Integer id = Integer.parseInt(req.getParameter("id"));
+                    orderService.delete(id);
+                    resp.sendRedirect("orders?page=1&size=5");
+                }
+                case "new" -> req.getRequestDispatcher("/order/form.jsp").forward(req, resp);
+            }
         }
     }
 

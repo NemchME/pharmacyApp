@@ -70,18 +70,24 @@ public class AvailabilityOfMedicineServlet extends HttpServlet {
 
             req.setAttribute("availabilityOfMedicines", availabilityOfMedicines);
             req.getRequestDispatcher("/availabilityOfMedicine/list.jsp").forward(req, resp);
-        } else if (action.equals("edit")) {
-            Integer id = Integer.parseInt(req.getParameter("id"));
-            Optional<AvailabilityOfMedicine> availabilityOfMedicine = Optional
-                    .ofNullable(availabilityOfMedicineService.findById(id));
-            req.setAttribute("availabilityOfMedicine", availabilityOfMedicine.orElse(null));
-            req.getRequestDispatcher("/availabilityOfMedicine/form.jsp").forward(req, resp);
-        } else if (action.equals("delete")) {
-            Integer id = Integer.parseInt(req.getParameter("id"));
-            availabilityOfMedicineService.delete(id);
-            resp.sendRedirect("availabilityOfMedicines?page=1&size=5");
-        } else if (action.equals("new")) {
-            req.getRequestDispatcher("/availabilityOfMedicine/form.jsp").forward(req, resp);
+        } else {
+            req.setAttribute("pharmacies", availabilityOfMedicineService.getPharmacyService().findAll());
+            req.setAttribute("medicines", availabilityOfMedicineService.getMedicineService().findAll());
+            switch (action) {
+                case "edit" -> {
+                    Integer id = Integer.parseInt(req.getParameter("id"));
+                    Optional<AvailabilityOfMedicine> availabilityOfMedicine = Optional
+                            .ofNullable(availabilityOfMedicineService.findById(id));
+                    req.setAttribute("availabilityOfMedicine", availabilityOfMedicine.orElse(null));
+                    req.getRequestDispatcher("/availabilityOfMedicine/form.jsp").forward(req, resp);
+                }
+                case "delete" -> {
+                    Integer id = Integer.parseInt(req.getParameter("id"));
+                    availabilityOfMedicineService.delete(id);
+                    resp.sendRedirect("availabilityOfMedicines?page=1&size=5");
+                }
+                case "new" -> req.getRequestDispatcher("/availabilityOfMedicine/form.jsp").forward(req, resp);
+            }
         }
     }
 

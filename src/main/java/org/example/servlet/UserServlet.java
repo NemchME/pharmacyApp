@@ -7,6 +7,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.example.context.AppContext;
+import org.example.exception.NotUniqueValueException;
 import org.example.model.User;
 import org.example.service.UserService;
 
@@ -86,7 +87,7 @@ public class UserServlet extends HttpServlet {
 
     @Override
     public void doPost(HttpServletRequest req, HttpServletResponse resp)
-            throws IOException {
+            throws ServletException, IOException {
 
         String idStr = req.getParameter("id");
         String username = req.getParameter("username");
@@ -96,13 +97,20 @@ public class UserServlet extends HttpServlet {
 
         User user = new User(username, passwordHash, email, role);
 
-        if (idStr == null || idStr.isBlank()) {
-            userService.save(user);
-        } else {
-            user.setId(Integer.parseInt(idStr));
-            userService.update(user);
-        }
+        try {
+            if (idStr == null || idStr.isBlank()) {
+                userService.save(user);
+            } else {
+                user.setId(Integer.parseInt(idStr));
+                userService.update(user);
+            }
 
-        resp.sendRedirect("users?page=1&size=5");
+            resp.sendRedirect("users?page=1&size=5");
+        } catch (NotUniqueValueException e) {
+            req.setAttribute("usernameError", e.getMessage());
+            req.setAttribute("user", user);
+            req.getRequestDispatcher("user/form.jsp").forward(req, resp);
+        }
     }
 }
+

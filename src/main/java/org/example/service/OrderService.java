@@ -77,4 +77,16 @@ public class OrderService {
     public List<OrderInfo> findByUserId(Integer userId) {
         return orderRepository.findByUserId(userId);
     }
+
+    public UserService getUserService() {
+        return userService;
+    }
+
+    public MedicineService getMedicineService() {
+        return medicineService;
+    }
+
+    public PharmacyService getPharmacyService() {
+        return pharmacyService;
+    }
 }

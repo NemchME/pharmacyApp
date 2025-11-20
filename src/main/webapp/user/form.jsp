@@ -1,4 +1,5 @@
 <%@ page contentType="text/html; charset=UTF-8" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 
 <html>
 <head><title>Форма пользователя</title></head>
@@ -20,14 +21,22 @@
 
 
 <div align="center">
-<h1>${user != null ? "Редактирование пользователя" : "Добавление пользователя"}</h1>
+<h1>${user.id != null ? "Редактирование пользователя" : "Добавление пользователя"}</h1>
 <form action="users" method="post">
     <input type="hidden" name="id" value="${user.id}" />
 
 <table border="0" cellpadding="6">
         <tr>
             <td align="right"><b>Никнейм:</b></td>
-            <td><input type="text" name="username" value="${user.username}" size="40" required></td>
+            <td>
+                <input type="text" name="username" value="${user.username}" size="40" required><br>
+                            <c:if test="${not empty usernameError}">
+                                <span style="color: red; font-size: 12px;">
+                                    ${usernameError}
+                                </span>
+                            </c:if>
+
+                </td>
         </tr>
         <tr>
             <td align="right"><b>Пароль:</b></td>
@@ -39,7 +48,7 @@
         </tr>
         <tr>
             <td align="right"><b>Роль:</b></td>
-            <td><input type="text" name="name" value="${user.role}" size="40" required></td>
+            <td><input type="text" name="role" value="${user.role}" size="40" required></td>
         </tr>
         <tr>
             <td colspan="2" align="center">
