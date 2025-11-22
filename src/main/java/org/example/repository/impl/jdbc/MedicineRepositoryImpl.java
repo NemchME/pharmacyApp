@@ -40,7 +40,11 @@ public class MedicineRepositoryImpl implements MedicineRepository {
 
     @Override
     public Optional<Medicine> findById(Integer id) {
-        String sql = "SELECT * FROM medicine WHERE id = ?";
+        String sql = "SELECT m.*, p.name AS producer_name, " +
+                "p.country AS producer_country " +
+                "FROM medicine m " +
+                "JOIN producer p ON m.producer_id = p.id " +
+                "WHERE m.id=?";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setLong(1, id);
             try (ResultSet rs = ps.executeQuery()) {
@@ -72,7 +76,7 @@ public class MedicineRepositoryImpl implements MedicineRepository {
 
     public List<Medicine> findAll(int page, int size) {
         List<Medicine> medicineList = new ArrayList<>();
-        String sql = "SELECT m.id, m.trade_name, m.inn, m.dosage, m.form, m.producer_id, p.name AS producer_name, " +
+        String sql = "SELECT m.*, p.name AS producer_name, " +
                 "p.country AS producer_country " +
                 "FROM medicine m " +
                 "JOIN producer p ON m.producer_id = p.id " +
