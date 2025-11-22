@@ -72,7 +72,11 @@ public class MedicineRepositoryImpl implements MedicineRepository {
 
     public List<Medicine> findAll(int page, int size) {
         List<Medicine> medicineList = new ArrayList<>();
-        String sql = "SELECT * FROM medicine LIMIT ? OFFSET ?";
+        String sql = "SELECT m.id, m.trade_name, m.inn, m.dosage, m.form, m.producer_id, p.name AS producer_name, " +
+                "p.country AS producer_country " +
+                "FROM medicine m " +
+                "JOIN producer p ON m.producer_id = p.id " +
+                "LIMIT ? OFFSET ?";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setInt(1, size);
             ps.setInt(2, (page - 1) * size);
@@ -198,6 +202,8 @@ public class MedicineRepositoryImpl implements MedicineRepository {
         medicine.setDosage(rs.getString("dosage"));
         medicine.setForm(rs.getString("form"));
         medicine.setProducerId(rs.getInt("producer_id"));
-        return medicine;
+        medicine.setProducerName(rs.getString("producer_name"));
+        medicine.setProducerCountry(rs.getString("producer_country"));
+                return medicine;
     }
 }

@@ -63,7 +63,7 @@
 </div>
 <table border="1" cellpadding="6" bgcolor="white" align="center">
     <tr bgcolor="#b3daff">
-        <th>ID</th><th>Торговое имя</th><th>ИНН</th><th>Дозировка</th><th>Форма</th><th>id поставщика</th><th></th>
+        <th>ID</th><th>Торговое имя</th><th>ИНН</th><th>Дозировка</th><th>Форма</th><th>Поставщик</th><th></th>
     </tr>
 
     <c:forEach var="medicine" items="${medicines}">
@@ -73,7 +73,7 @@
             <td><c:out value="${medicine.inn}"/></td>
             <td><c:out value="${medicine.dosage}"/></td>
             <td><c:out value="${medicine.form}"/></td>
-            <td><c:out value="${medicine.producerId}"/></td>
+            <td><c:out value="${medicine.producerName} — ${medicine.producerCountry}"/></td>
             <td align="center">
                 <a href="availabilityInfo?id=${medicine.id}">
                     <button type="button" style="background-color: lightgreen;">Наличие в аптеках</button>
