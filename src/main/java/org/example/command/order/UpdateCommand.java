@@ -30,7 +30,7 @@ public class UpdateCommand implements Command {
                     entityArgs[5].trim()
             );
             consoleApp.getOrderService().update(entity);
-            System.out.println("Сущность обновлена с id: " + entity.getId());
+            System.out.println("Сущность обновлена");
         } catch (IndexOutOfBoundsException e) {
             System.out.println(
                     "Ошибка: Введите следующие поля: id, user_id, medicine_id, pharmacy_id, quantily, status");

@@ -31,7 +31,7 @@ public class CreateCommand implements Command {
                     Validator.requireNotBlank(entityArgs[4], "Введите way_from_center")
             );
             consoleApp.getPharmacyService().save(entity);
-            System.out.println("Сущность сохранена с id: " + entity.getId());
+            System.out.println("Сущность сохранена");
         } catch (IndexOutOfBoundsException e) {
             System.out.println(
                     "Ошибка: Введите следующие поля: name, address, phone, working_hours, way_from_center");

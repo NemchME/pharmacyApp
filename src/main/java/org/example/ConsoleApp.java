@@ -3,13 +3,15 @@ package org.example;
 import org.example.menu.Menu;
 import org.example.menu.impl.MainMenu;
 import org.example.model.*;
-import org.example.repository.impl.inmemory.*;
+import org.example.repository.impl.jdbc.*;
 import org.example.service.*;
+import org.example.sql.config.DBConnection;
 
 import java.util.Scanner;
 
 public class ConsoleApp {
 
+    private final DBConnection connection = new DBConnection();
     private final AvailabilityOfMedicineService availabilityOfMedicineService;
     private final MedicineService medicineService;
     private final OrderService orderService;
@@ -20,20 +22,19 @@ public class ConsoleApp {
     private Menu menu = new MainMenu();
 
     public ConsoleApp() {
-        this.pharmacyService = new PharmacyService(new PharmacyRepositoryImpl());
-        this.producerService = new ProducerService(new ProducerRepositoryImpl());
-        this.userService = new UserService(new UserRepositoryImpl());
-        this.medicineService = new MedicineService(new MedicineRepositoryImpl(), this.producerService);
+        this.pharmacyService = new PharmacyService(new PharmacyRepositoryImpl(connection));
+        this.producerService = new ProducerService(new ProducerRepositoryImpl(connection));
+        this.userService = new UserService(new UserRepositoryImpl(connection));
+        this.medicineService = new MedicineService(new MedicineRepositoryImpl(connection), this.producerService);
         this.availabilityOfMedicineService = new AvailabilityOfMedicineService(
-                new AvailabilityRepositoryImpl(), this.pharmacyService, this.medicineService);
+                new AvailabilityOfMedicineRepositoryImpl(connection), this.pharmacyService, this.medicineService);
         this.orderService = new OrderService(
-                new OrderRepositoryImpl(), this.userService, this.medicineService, this.pharmacyService);
+                new OrderRepositoryImpl(connection), this.userService, this.medicineService, this.pharmacyService);
     }
 
     public void run() {
-        inputTestData();
         while (true) {
-        menu = menu.show(this);
+            menu = menu.show(this);
         }
     }
 
@@ -77,8 +78,8 @@ public class ConsoleApp {
         Producer producer = new Producer("Производитель №1", "Россия");
         User user = new User("Пользователь", "Пароль", "mail@mail.ru", "юзер");
         Medicine medicine = new Medicine("лекарство", "инн", "20 мг", "форма", 0);
-        AvailabilityOfMedicine availabilityOfMedicine = new AvailabilityOfMedicine(0,0,100.0f,5);
-        Order order = new Order(0,0,0,50,"Создан");
+        AvailabilityOfMedicine availabilityOfMedicine = new AvailabilityOfMedicine(0, 0, 100.0f, 5);
+        Order order = new Order(0, 0, 0, 50, "Создан");
         pharmacyService.save(pharmacy);
         producerService.save(producer);
         userService.save(user);

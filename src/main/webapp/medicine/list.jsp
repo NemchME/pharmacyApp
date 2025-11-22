@@ -1,0 +1,108 @@
+<%@ page contentType="text/html; charset=UTF-8" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+
+<html>
+<head><title>Список препаратов</title></head>
+<body bgcolor="#e6f2ff">
+<div align="center" style="margin-bottom: 20px;">
+    <table border="0" cellpadding="8" bgcolor="#cce5ff">
+        <tr>
+            <td><a href="stats"><b>Статистика</b></a></td>
+            <td><a href="availabilityOfMedicines?page=1&size=5"><b>AvailabilityOfMedicines</b></a></td>
+            <td><a href="medicines?page=1&size=5"><b>Medicine</b></a></td>
+            <td><a href="orders?page=1&size=5"><b>Order</b></a></td>
+            <td><a href="pharmacies?page=1&size=5"><b>Pharmacy</b></a></td>
+            <td><a href="producers?page=1&size=5"><b>Producer</b></a></td>
+            <td><a href="users?page=1&size=5"><b>User</b></a></td>
+        </tr>
+    </table>
+</div>
+<div align="right">
+    <h2>Поиск по слову</h2>
+    <form action="medicines" method="get">
+        <input type="hidden" name="action" value="list"/>
+        <input type="text" name="search" placeholder="Введите слово для поиска" value="${param.search}" required/>
+
+        <input type="submit" value="Применить"/>
+    </form>
+
+    <h2>Сортировка</h2>
+    <form action="medicines" method="get">
+        <select name="sort">
+                    <option value="">По ID</option>
+                    <option value="tradeName" ${param.sort == 'tradeName' ? 'selected' : ''}>По торговому имени</option>
+                    <option value="inn" ${param.sort == 'inn' ? 'selected' : ''}>По ИНН</option>
+                    <option value="dosage" ${param.sort == 'dosage' ? 'selected' : ''}>По дозировке</option>
+                    <option value="form" ${param.sort == 'form' ? 'selected' : ''}>По форме</option>
+                    <option value="producerId" ${param.sort == 'producerId' ? 'selected' : ''}>По id производителя</option>
+        </select>
+        <select name="comparator">
+            <option value="asc" ${param.comparator == 'asc' ? 'selected' : ''}>По возрастанию</option>
+            <option value="desc" ${param.comparator == 'desc' ? 'selected' : ''}>По убыванию</option>
+        </select>
+        <input type="submit" value="Применить"/>
+    </form
+</div>
+    <br/>
+<div align="center">
+
+<h1>Список препаратов</h1>
+    <a href="medicines?action=new">
+        <button type="button" style="background-color: lightgreen; padding: 5px 10px;"><b>Добавить препарат</b></button>
+    </a>
+</div>
+
+<br/>
+
+<div align="center">
+    <c:if test="${search != null}">
+        <div>
+            <h2>Результат поиска по слову: "${search}"</h2>
+        </div>
+    </c:if>
+</div>
+<table border="1" cellpadding="6" bgcolor="white" align="center">
+    <tr bgcolor="#b3daff">
+        <th>ID</th><th>Торговое имя</th><th>ИНН</th><th>Дозировка</th><th>Форма</th><th>Поставщик</th><th></th>
+    </tr>
+
+    <c:forEach var="medicine" items="${medicines}">
+        <tr bgcolor="#f0f8ff">
+            <td><c:out value="${medicine.id}"/></td>
+            <td><c:out value="${medicine.tradeName}"/></td>
+            <td><c:out value="${medicine.inn}"/></td>
+            <td><c:out value="${medicine.dosage}"/></td>
+            <td><c:out value="${medicine.form}"/></td>
+            <td><c:out value="${medicine.producerName} — ${medicine.producerCountry}"/></td>
+            <td align="center">
+                <a href="availabilityInfo?id=${medicine.id}">
+                    <button type="button" style="background-color: lightgreen;">Наличие в аптеках</button>
+                </a>
+                <a href="medicines?action=edit&id=${medicine.id}">
+                    <button type="button" style="background-color: lightblue;">Редактировать</button>
+                </a>
+                <a href="medicines?action=delete&id=${medicine.id}" onclick="return confirm('Удалить аптеку id=${pharmacy.id}?');">
+                    <button type="button" style="background-color: lightcoral;">Удалить</button>
+                </a>
+            </td>
+        </tr>
+    </c:forEach>
+</table>
+<br/>
+<div align="center">
+    <c:if test="${totalPages > 1}">
+        <div>
+            <c:if test="${currentPage > 1}">
+                <a href="medicines?page=${currentPage - 1}&size=${currentSize}">&laquo; Предыдущая</a>
+            </c:if>
+
+            Страница ${currentPage} из ${totalPages}
+
+            <c:if test="${currentPage < totalPages}">
+                <a href="medicines?page=${currentPage + 1}&size=${currentSize}">Следующая &raquo;</a>
+            </c:if>
+        </div>
+    </c:if>
+</div>
+</body>
+</html>

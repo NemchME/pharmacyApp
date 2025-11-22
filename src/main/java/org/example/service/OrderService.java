@@ -2,6 +2,7 @@ package org.example.service;
 
 import org.example.exception.EntityNotFoundException;
 import org.example.model.Order;
+import org.example.model.OrderInfo;
 import org.example.repository.OrderRepository;
 
 import java.util.List;
@@ -25,7 +26,7 @@ public class OrderService {
 
     public void save(Order order) {
         if (checkForeignKeys(order.getUserId(), order.getMedicineId(), order.getPharmacyId())) {
-        orderRepository.save(order);
+            orderRepository.save(order);
         }
     }
 
@@ -37,6 +38,24 @@ public class OrderService {
 
     public List<Order> findAll() {
         return orderRepository.findAll();
+    }
+
+    public List<Order> findAll(int page, int size) {
+        return orderRepository.findAll(page, size);
+    }
+
+    public int getTotalPages(int size) {
+        int total = orderRepository.countAll();
+        return (int) Math.ceil((double) total / size);
+    }
+
+    public List<Order> filter(String search) {
+        return orderRepository.filter(search);
+    }
+
+    public List<Order> sort(String sort, String comparator) {
+
+        return orderRepository.sort(sort, comparator);
     }
 
     public void update(Order order) {
@@ -53,5 +72,21 @@ public class OrderService {
     private boolean checkForeignKeys(Integer userId, Integer medicineId, Integer pharmacyId) {
         return userService.findById(userId) != null && medicineService.findById(medicineId) != null &&
                 pharmacyService.findById(pharmacyId) != null;
+    }
+
+    public List<OrderInfo> findByUserId(Integer userId) {
+        return orderRepository.findByUserId(userId);
+    }
+
+    public UserService getUserService() {
+        return userService;
+    }
+
+    public MedicineService getMedicineService() {
+        return medicineService;
+    }
+
+    public PharmacyService getPharmacyService() {
+        return pharmacyService;
     }
 }

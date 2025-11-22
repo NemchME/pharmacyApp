@@ -27,6 +27,10 @@ public class Pharmacy {
         this.wayFromCenter = wayFromCenter;
     }
 
+    public Pharmacy() {
+
+    }
+
     public Integer getId() {
         return id;
     }

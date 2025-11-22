@@ -1,5 +1,6 @@
 package org.example.repository.impl.inmemory;
 
+import org.example.model.AvailabilityInfo;
 import org.example.model.Pharmacy;
 import org.example.repository.PharmacyRepository;
 
@@ -30,6 +31,26 @@ public class PharmacyRepositoryImpl implements PharmacyRepository {
     }
 
     @Override
+    public List<Pharmacy> filter(String search) {
+        return List.of();
+    }
+
+    @Override
+    public List<Pharmacy> findAll(int page, int size) {
+        return List.of();
+    }
+
+    @Override
+    public int countAll() {
+        return storageMap.size();
+    }
+
+    @Override
+    public List<Pharmacy> sort(String sort, String comparator) {
+        return List.of();
+    }
+
+    @Override
     public void update(Pharmacy entity) {
         storageMap.put(entity.getId(), entity);
     }
@@ -38,4 +59,5 @@ public class PharmacyRepositoryImpl implements PharmacyRepository {
     public void delete(Integer id) {
         storageMap.remove(id);
     }
+
 }

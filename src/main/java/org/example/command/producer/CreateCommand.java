@@ -13,7 +13,7 @@ public class CreateCommand implements Command {
     public Menu execute(ConsoleApp consoleApp) {
         try {
             System.out.println("""
-                    Введите данные о пользователе через запятую:
+                    Введите данные о производителе через запятую:
                     [name, country].
                     Пример ввода: Фарма, Германия
                     """);
@@ -28,7 +28,7 @@ public class CreateCommand implements Command {
                     Validator.requireNotBlank(entityArgs[1], "Введите country")
             );
             consoleApp.getProducerService().save(entity);
-            System.out.println("Сущность сохранена с id: " + entity.getId());
+            System.out.println("Сущность сохранена");
         } catch (IndexOutOfBoundsException e) {
             System.out.println(
                     "Ошибка: Введите следующие поля: name, country");

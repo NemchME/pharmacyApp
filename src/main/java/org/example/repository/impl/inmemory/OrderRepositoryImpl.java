@@ -1,6 +1,7 @@
 package org.example.repository.impl.inmemory;
 
 import org.example.model.Order;
+import org.example.model.OrderInfo;
 import org.example.repository.OrderRepository;
 
 import java.util.HashMap;
@@ -30,6 +31,26 @@ public class OrderRepositoryImpl implements OrderRepository {
     }
 
     @Override
+    public List<Order> filter(String search) {
+        return List.of();
+    }
+
+    @Override
+    public List<Order> findAll(int page, int size) {
+        return List.of();
+    }
+
+    @Override
+    public int countAll() {
+        return storageMap.size();
+    }
+
+    @Override
+    public List<Order> sort(String sort, String comparator) {
+        return List.of();
+    }
+
+    @Override
     public void update(Order entity) {
         storageMap.put(entity.getId(), entity);
     }
@@ -37,5 +58,10 @@ public class OrderRepositoryImpl implements OrderRepository {
     @Override
     public void delete(Integer id) {
         storageMap.remove(id);
+    }
+
+    @Override
+    public List<OrderInfo> findByUserId(Integer userId) {
+        return List.of();
     }
 }

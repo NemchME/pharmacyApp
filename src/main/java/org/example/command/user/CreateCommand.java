@@ -30,7 +30,7 @@ public class CreateCommand implements Command {
                     Validator.requireNotBlank(entityArgs[3], "Введите role")
             );
             consoleApp.getUserService().save(entity);
-            System.out.println("Сущность сохранена с id: " + entity.getId());
+            System.out.println("Сущность сохранена");
         } catch (IndexOutOfBoundsException e) {
             System.out.println(
                     "Ошибка: Введите следующие поля: username, password_hash, email, role");

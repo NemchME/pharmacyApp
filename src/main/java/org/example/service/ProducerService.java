@@ -28,13 +28,33 @@ public class ProducerService {
         return producerRepository.findAll();
     }
 
+    public List<Producer> findAll(int page, int size) {
+        return producerRepository.findAll(page, size);
+    }
+
+    public int getTotalPages(int size) {
+        int total = producerRepository.countAll();
+        return (int) Math.ceil((double) total / size);
+    }
+
     public void update(Producer producer) {
         if (findById(producer.getId()) != null) {
             producerRepository.update(producer);
         }
     }
 
+    public List<Producer> filter(String search) {
+        return producerRepository.filter(search);
+    }
+
+    public List<Producer> sort(String sort, String comparator) {
+
+        return producerRepository.sort(sort, comparator);
+    }
+
+
     public void delete(Integer id) {
         producerRepository.delete(id);
     }
+
 }

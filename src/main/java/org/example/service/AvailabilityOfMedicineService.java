@@ -1,7 +1,9 @@
 package org.example.service;
 
 import org.example.exception.EntityNotFoundException;
+import org.example.model.AvailabilityInfo;
 import org.example.model.AvailabilityOfMedicine;
+import org.example.model.PharmacyInfo;
 import org.example.repository.AvailabilityOfMedicineRepository;
 
 import java.util.List;
@@ -37,11 +39,29 @@ public class AvailabilityOfMedicineService {
         return availabilityOfMedicineRepository.findAll();
     }
 
+    public List<AvailabilityOfMedicine> findAll(int page, int size) {
+        return availabilityOfMedicineRepository.findAll(page, size);
+    }
+
+    public int getTotalPages(int size) {
+        int total = availabilityOfMedicineRepository.countAll();
+        return (int) Math.ceil((double) total / size);
+    }
+
     public void update(AvailabilityOfMedicine availabilityOfMedicine) {
         if (findById(availabilityOfMedicine.getId()) != null &&
                 checkForeignKeys(availabilityOfMedicine.getPharmacyId(), availabilityOfMedicine.getMedicineId())) {
             availabilityOfMedicineRepository.update(availabilityOfMedicine);
         }
+    }
+
+    public List<AvailabilityOfMedicine> filter(String search) {
+        return availabilityOfMedicineRepository.filter(search);
+    }
+
+    public List<AvailabilityOfMedicine> sort(String sort, String comparator) {
+
+        return availabilityOfMedicineRepository.sort(sort, comparator);
     }
 
     public void delete(Integer id) {
@@ -50,5 +70,21 @@ public class AvailabilityOfMedicineService {
 
     private boolean checkForeignKeys(Integer pharmacyId, Integer medicineId) {
         return pharmacyService.findById(pharmacyId) != null && medicineService.findById(medicineId) != null;
+    }
+
+    public List<AvailabilityInfo> findByMedicineId(Integer medicineId) {
+        return availabilityOfMedicineRepository.findByMedicineId(medicineId);
+    }
+
+    public List<PharmacyInfo> findByPharmacyId(Integer pharmacyId) {
+        return availabilityOfMedicineRepository.findByPharmacyId(pharmacyId);
+    }
+
+    public PharmacyService getPharmacyService() {
+        return pharmacyService;
+    }
+
+    public MedicineService getMedicineService() {
+        return medicineService;
     }
 }

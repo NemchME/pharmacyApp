@@ -30,7 +30,7 @@ public class CreateCommand implements Command {
                     Integer.parseInt(Validator.requireNotBlank(entityArgs[3], "Введите quantily"))
             );
             consoleApp.getAvailabilityOfMedicineService().save(entity);
-            System.out.println("Сущность сохранена с id: " + entity.getId());
+            System.out.println("Сущность сохранена!");
         } catch (IndexOutOfBoundsException e) {
             System.out.println(
                     "Ошибка: Введите следующие поля: pharmacy_id, medicine_id, price, quantily");

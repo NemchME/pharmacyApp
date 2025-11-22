@@ -27,7 +27,7 @@ public class UpdateCommand implements Command {
                     entityArgs[2].trim()
             );
             consoleApp.getProducerService().update(entity);
-            System.out.println("Сущность обновлена с id: " + entity.getId());
+            System.out.println("Сущность обновлена");
         } catch (IndexOutOfBoundsException e) {
             System.out.println(
                     "Ошибка: Введите следующие поля: name, country");

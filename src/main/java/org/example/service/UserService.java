@@ -27,9 +27,26 @@ public class UserService {
         return userRepository.findAll();
     }
 
+    public List<User> findAll(int page, int size) {
+        return userRepository.findAll(page, size);
+    }
+
+    public int getTotalPages(int size) {
+        int total = userRepository.countAll();
+        return (int) Math.ceil((double) total / size);
+    }
+
+    public List<User> filter(String search) {
+        return userRepository.filter(search);
+    }
+
+    public List<User> sort(String sort, String comparator) {
+
+        return userRepository.sort(sort, comparator);
+    }
+
     public void update(User user) {
-        if (findById(user.getId()) != null);
-        {
+        if (findById(user.getId()) != null) {
             userRepository.update(user);
         }
     }

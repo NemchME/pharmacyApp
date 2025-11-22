@@ -9,6 +9,17 @@ public class Medicine {
     private String dosage;
     private String form;
     private Integer producerId;
+    private String producerName;
+
+    public String getProducerCountry() {
+        return producerCountry;
+    }
+
+    public void setProducerCountry(String producerCountry) {
+        this.producerCountry = producerCountry;
+    }
+
+    private String producerCountry;
 
     public Medicine(Integer id, String tradeName, String inn, String dosage, String form, Integer producerId) {
         this.id = id;
@@ -27,11 +38,15 @@ public class Medicine {
         this.producerId = producerId;
     }
 
-    public int getId() {
+    public Medicine() {
+
+    }
+
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -75,6 +90,14 @@ public class Medicine {
         this.producerId = producerId;
     }
 
+    public String getProducerName() {
+        return producerName;
+    }
+
+    public void setProducerName(String producerName) {
+        this.producerName = producerName;
+    }
+
     @Override
     public String toString() {
         return "Medicine{" +
@@ -84,6 +107,7 @@ public class Medicine {
                 ", dosage='" + dosage + '\'' +
                 ", form='" + form + '\'' +
                 ", producerId=" + producerId +
+                ", producerName='" + producerName + '\'' +
                 '}';
     }
 
